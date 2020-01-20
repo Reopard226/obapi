@@ -47,6 +47,7 @@ push staging:
   stage: push
   only:
     - development
+    - merge_requests
   variables:
     GIT_STRATEGY: none
     DOCKER_DRIVER: overlay2
@@ -63,6 +64,8 @@ push master:
     - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token registry.gitlab.com --password-stdin
     - docker login -u _json_key --password-stdin https://eu.gcr.io < $GITLAB_DEPLOY_BOT_KEY_PROD
   image: docker:19.03.0
+  only:
+    - master
   services:
     - docker:19.03.0-dind
   stage: push
