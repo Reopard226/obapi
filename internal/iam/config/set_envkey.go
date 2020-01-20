@@ -13,10 +13,12 @@ func SetEnvKey() {
 
 type Config struct {
 	MONGODB_CONNECTION_STRING string
-	MONGODB_DATABASE_NAME string
-	MONGODB_COLLECTION_NAME string
-	JWKS_RS256_PRIVATE_KEY string
-
+	MONGODB_DATABASE_NAME     string
+	MONGODB_COLLECTION_NAME   string
+	JWKS_RS256_PRIVATE_KEY    string
+	AUTH0_MGMT_CLIENT_ID      string
+	AUTH0_MGMT_CLIENT_SECRET  string
+	AUTH0_DOMAIN              string
 }
 
 func (c *Config) ParseEnv() error {
@@ -24,6 +26,9 @@ func (c *Config) ParseEnv() error {
 	mustMapEnv(&c.MONGODB_DATABASE_NAME, "MONGODB_DATABASE_NAME")
 	mustMapEnv(&c.MONGODB_COLLECTION_NAME, "MONGODB_COLLECTION_NAME")
 	mustMapEnv(&c.JWKS_RS256_PRIVATE_KEY, "JWKS_RS256_PRIVATE_KEY")
+	mustMapEnv(&c.AUTH0_MGMT_CLIENT_ID, "AUTH0_MGMT_CLIENT_ID")
+	mustMapEnv(&c.AUTH0_MGMT_CLIENT_SECRET, "AUTH0_MGMT_CLIENT_SECRET")
+	mustMapEnv(&c.AUTH0_DOMAIN, "AUTH0_DOMAIN")
 
 	return nil
 }

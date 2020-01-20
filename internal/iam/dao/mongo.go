@@ -10,30 +10,28 @@ import (
 	"oceanbolt.com/iamservice/rpc/iam"
 )
 
-
-
 // COLLNAME Collection name
 const COLLNAME = "apikeys"
 
 type IamDAO struct {
 	Ctx context.Context
-	Db *mongo.Database
+	Db  *mongo.Database
 }
 
 func NewMongoDatabase(connString string, database string) (*mongo.Database, error) {
 	var dbInit *mongo.Database
 	client, err := mongo.NewClient(options.Client().ApplyURI(connString))
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 	err = client.Connect(context.Background())
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 	// Collection types can be used to access the database
 	dbInit = client.Database(database)
 
-	return dbInit,nil
+	return dbInit, nil
 
 }
 
@@ -53,7 +51,7 @@ func (m *IamDAO) ListKeys(user *iam.User) (*iam.UserKeys, error) {
 		log.Fatal(err)
 	}
 
-	return &iam.UserKeys{NumberOfKeys: int64(len(structResult)), Keys: structResult},nil
+	return &iam.UserKeys{NumberOfKeys: int64(len(structResult)), Keys: structResult}, nil
 }
 
 func (m *IamDAO) InsertKey(key *iam.UserKey) error {
@@ -69,12 +67,28 @@ func (m *IamDAO) InsertKey(key *iam.UserKey) error {
 func (m *IamDAO) DeleteKey(key *iam.DeleteKeyRequest) error {
 
 	collection := m.Db.Collection(COLLNAME)
-	resp, err := collection.DeleteOne(m.Ctx, bson.M{"apikey_id":key.ApikeyId,"user_id":key.UserId})
+	resp, err := collection.DeleteOne(m.Ctx, bson.M{"apikey_id": key.ApikeyId, "user_id": key.UserId})
 	if err != nil {
 		return err
 	}
 	if resp.DeletedCount == 0 {
-		return errors.New("No key exists with apikey_id '"+key.ApikeyId+"'")
+		return errors.New("No key exists with apikey_id '" + key.ApikeyId + "'")
 	}
 	return nil
+}
+
+func (m *IamDAO) CheckKey(key *iam.UserKey) (bool, error) {
+	log.Println("Checking key...")
+
+	collection := m.Db.Collection(COLLNAME)
+	res := collection.FindOne(m.Ctx, bson.M{"apikey_id": key.ApikeyId, "user_id": key.UserId})
+	if res.Err() != nil {
+		if res.Err().Error() == "mongo: no documents in result" {
+			return false, nil
+		} else {
+			return false, res.Err()
+		}
+	}
+
+	return true, nil
 }

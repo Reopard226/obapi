@@ -5,43 +5,16 @@ import (
 	"crypto/md5"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
-	"go.mongodb.org/mongo-driver/mongo"
 	"log"
 	"math/rand"
-	"oceanbolt.com/iamservice/internal/config"
-	"oceanbolt.com/iamservice/internal/dao"
-	pb "oceanbolt.com/iamservice/rpc/iam"
+	"oceanbolt.com/iamservice/internal/iam/dao"
+	"oceanbolt.com/iamservice/rpc/iam"
 	"strings"
 	"time"
 )
 
-type Server struct {
-	Db *mongo.Database
-	Config *config.Config
-}
-
-func (s *Server) ListKeys(ctx context.Context, user *pb.User) (keys *pb.UserKeys, err error) {
-	db := dao.IamDAO{Ctx: ctx, Db: s.Db,}
-
-	return db.ListKeys(user)
-}
-
-func (s *Server) DeleteKey(ctx context.Context, req *pb.DeleteKeyRequest) (resp *pb.KeyDeletedResponse, err error) {
-	db := dao.IamDAO{Ctx: ctx, Db: s.Db,}
-
-	err = db.DeleteKey(req)
-	if err != nil {
-		return resp, err
-	}
-
-	resp = &pb.KeyDeletedResponse{
-		Message:"Key '" + req.ApikeyId + "' successfully deleted",
-	}
-	return resp, nil
-}
-
-func (s *Server) CreateKey(ctx context.Context, req *pb.CreateKeyRequest) (key *pb.UserKeyWithSecret, err error) {
-	db := dao.IamDAO{Ctx: ctx, Db: s.Db,}
+func (s *Server) CreateKey(ctx context.Context, req *iam.CreateKeyRequest) (key *iam.UserKeyWithSecret, err error) {
+	db := dao.IamDAO{Ctx: ctx, Db: s.Db}
 
 	parsedKey, err := jwt.ParseRSAPrivateKeyFromPEM([]byte(s.Config.JWKS_RS256_PRIVATE_KEY))
 	if err != nil {
@@ -50,8 +23,8 @@ func (s *Server) CreateKey(ctx context.Context, req *pb.CreateKeyRequest) (key *
 
 	obkid := getKeyId(16)
 	signKeyBytePrint := md5.Sum([]byte(s.Config.JWKS_RS256_PRIVATE_KEY))
-	signKeyStringPrint := fmt.Sprintf("%x",signKeyBytePrint)
-	
+	signKeyStringPrint := fmt.Sprintf("%x", signKeyBytePrint)
+
 	token := jwt.NewWithClaims(jwt.SigningMethodRS256, jwt.MapClaims{
 		"aud":   "https://api.oceanbolt.com",
 		"iss":   "https://oceanbolt.eu.auth0.com/",
@@ -59,7 +32,7 @@ func (s *Server) CreateKey(ctx context.Context, req *pb.CreateKeyRequest) (key *
 		"obkid": obkid,
 		"sub":   req.UserId,
 		"iat":   time.Now().Unix(),
-		"exp":   time.Unix(req.Expires,0),
+		"exp":   time.Unix(req.Expires, 0),
 	})
 	token.Header["kid"] = signKeyStringPrint
 
@@ -67,8 +40,8 @@ func (s *Server) CreateKey(ctx context.Context, req *pb.CreateKeyRequest) (key *
 	if err != nil {
 		log.Fatal("Token could not be signed")
 	}
-	
-	err = db.InsertKey(&pb.UserKey{
+
+	err = db.InsertKey(&iam.UserKey{
 		ApikeyId:     obkid,
 		Expires:      req.Expires,
 		UserId:       req.UserId,
@@ -79,13 +52,13 @@ func (s *Server) CreateKey(ctx context.Context, req *pb.CreateKeyRequest) (key *
 		return key, err
 	}
 
-	return &pb.UserKeyWithSecret{
+	return &iam.UserKeyWithSecret{
 		Expires:      req.Expires,
 		ApikeyId:     obkid,
 		KeyTag:       req.KeyTag,
 		ApikeySecret: signedToken,
 		UserId:       req.UserId,
-	},nil
+	}, nil
 }
 
 func getKeyId(length int) string {

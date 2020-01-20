@@ -1,12 +1,13 @@
 package main
 
 import (
+	"gopkg.in/auth0.v3/management"
 	"log"
 	"net/http"
-	"oceanbolt.com/iamservice/internal/config"
-	"oceanbolt.com/iamservice/internal/dao"
-	"oceanbolt.com/iamservice/internal/hooks"
-	"oceanbolt.com/iamservice/internal/iamserver"
+	"oceanbolt.com/iamservice/internal/iam/config"
+	"oceanbolt.com/iamservice/internal/iam/dao"
+	"oceanbolt.com/iamservice/internal/iam/hooks"
+	"oceanbolt.com/iamservice/internal/iam/iamserver"
 	"oceanbolt.com/iamservice/rpc/iam"
 	"os"
 )
@@ -30,17 +31,23 @@ func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "1323"
+		port = "8080"
 	}
 
-	db, err := dao.NewMongoDatabase(cfg.MONGODB_CONNECTION_STRING,cfg.MONGODB_DATABASE_NAME)
+	auth0, err := management.New(cfg.AUTH0_DOMAIN, cfg.AUTH0_MGMT_CLIENT_ID, cfg.AUTH0_MGMT_CLIENT_SECRET)
+	if err != nil {
+		panic(err)
+	}
+
+	db, err := dao.NewMongoDatabase(cfg.MONGODB_CONNECTION_STRING, cfg.MONGODB_DATABASE_NAME)
 	if err != nil {
 		panic(err)
 	}
 
 	server := &iamserver.Server{
-		Db:db,
-		Config:&cfg,
+		Db:     db,
+		Config: &cfg,
+		Auth0:  auth0,
 	} // implements Haberdasher interface
 
 	twirpHandler := iam.NewApikeyServer(server, hooks.NewLoggerHooks())

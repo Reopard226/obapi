@@ -12,6 +12,8 @@ service Apikey {
     rpc CreateKey(CreateKeyRequest) returns (UserKeyWithSecret);
 
     rpc DeleteKey(DeleteKeyRequest) returns (KeyDeletedResponse);
+
+    rpc ValidateKey(UserKey) returns (ValidationResponse);
 }
 
 // User object used to retrieve keys
@@ -53,4 +55,9 @@ message DeleteKeyRequest {
 
 message KeyDeletedResponse {
     string message = 1;
+}
+
+message ValidationResponse {
+    bool valid = 1;
+    repeated string permissions = 2;
 }

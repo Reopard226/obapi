@@ -6,7 +6,7 @@ FROM golang:1.13 as builder
 # Copy local code to the container image.
 WORKDIR /iamserver
 COPY . .
-COPY ./cmd/server/main.go .
+COPY ./cmd/iamserver/main.go .
 
 # Build the command inside the container.
 # (You may fetch or manage dependencies here,
