@@ -21,7 +21,6 @@ func getReqStart(ctx context.Context) (time.Time, bool) {
 	return t, ok
 }
 
-
 func NewLoggerHooks() *twirp.ServerHooks {
 	logger, _ = zap.NewDevelopment()
 	defer logger.Sync()
@@ -67,48 +66,48 @@ func NewLoggerHooks() *twirp.ServerHooks {
 		// - method that was called
 		// - status code of response
 		/*		var (
-			start  time.Time
-			method string
-			status string
+					start  time.Time
+					method string
+					status string
 
-			haveStart  bool
-			haveMethod bool
-			haveStatus bool
-		)
+					haveStart  bool
+					haveMethod bool
+					haveStatus bool
+				)
 
-		start, haveStart = getReqStart(ctx)
-		method, haveMethod = twirp.MethodName(ctx)
-		status, haveStatus = twirp.StatusCode(ctx)
+				start, haveStart = getReqStart(ctx)
+				method, haveMethod = twirp.MethodName(ctx)
+				status, haveStatus = twirp.StatusCode(ctx)
 
-		method = sanitize(method)
-		status = sanitize(status)
+				method = sanitize(method)
+				status = sanitize(status)
 
-		stats.Inc("twirp.total.responses", 1, 1.0)
+				stats.Inc("twirp.total.responses", 1, 1.0)
 
-		if haveMethod {
-			stats.Inc("twirp."+method+".responses", 1, 1.0)
-		}
-		if haveStatus {
-			stats.Inc("twirp.status_codes.total."+status, 1, 1.0)
-		}
-		if haveMethod && haveStatus {
-			stats.Inc("twirp.status_codes."+method+"."+status, 1, 1.0)
-		}
+				if haveMethod {
+					stats.Inc("twirp."+method+".responses", 1, 1.0)
+				}
+				if haveStatus {
+					stats.Inc("twirp.status_codes.total."+status, 1, 1.0)
+				}
+				if haveMethod && haveStatus {
+					stats.Inc("twirp.status_codes."+method+"."+status, 1, 1.0)
+				}
 
-		if haveStart {
-			dur := time.Now().Sub(start)
-			stats.TimingDuration("twirp.all_methods.response", dur, 1.0)
+				if haveStart {
+					dur := time.Now().Sub(start)
+					stats.TimingDuration("twirp.all_methods.response", dur, 1.0)
 
-			if haveMethod {
-				stats.TimingDuration("twirp."+method+".response", dur, 1.0)
-			}
-			if haveStatus {
-				stats.TimingDuration("twirp.status_codes.all_methods."+status, dur, 1.0)
-			}
-			if haveMethod && haveStatus {
-				stats.TimingDuration("twirp.status_codes."+method+"."+status, dur, 1.0)
-			}
-		}*/
+					if haveMethod {
+						stats.TimingDuration("twirp."+method+".response", dur, 1.0)
+					}
+					if haveStatus {
+						stats.TimingDuration("twirp.status_codes.all_methods."+status, dur, 1.0)
+					}
+					if haveMethod && haveStatus {
+						stats.TimingDuration("twirp.status_codes."+method+"."+status, dur, 1.0)
+					}
+				}*/
 	}
 	return hooks
 }
