@@ -8,7 +8,8 @@ variables:
 stages:
   - build
   - push
-  - deploy
+  - deploy staging
+  - deploy prod
 
 build:
   before_script:
@@ -81,7 +82,7 @@ push images to gcr prod:
 
 deploy to staging:
   image: google/cloud-sdk:alpine
-  stage: deploy
+  stage: deploy staging
   only:
     - master
   variables:
@@ -102,7 +103,7 @@ deploy to staging:
 
 deploy to prod:
   image: google/cloud-sdk:alpine
-  stage: deploy
+  stage: deploy prod
   only:
     - master
   when: manual
