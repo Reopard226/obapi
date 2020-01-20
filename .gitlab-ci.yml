@@ -98,6 +98,7 @@ deploy to staging:
       --platform managed
       --region europe-west1
       --update-env-vars ENVKEY=$ENVKEY_STAGING
+      --service-account iamserver-cloud-run@ob-api-staging.iam.gserviceaccount.com
   environment:
     name: production
     #url: https://api-v2.oceanbolt.com
@@ -118,6 +119,7 @@ deploy to prod:
       --platform managed
       --region europe-west1
       --update-env-vars ENVKEY=$ENVKEY_PROD
+      --service-account iamserver-cloud-run@ob-api-prod.iam.gserviceaccount.com
   environment:
     name: staging
     #url: https://api-staging-v2.internal.oceanbolt.com
