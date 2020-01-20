@@ -22,4 +22,4 @@ RUN apk add --no-cache ca-certificates
 COPY --from=builder /iamserver /iamserver
 
 # Run the web service on container startup.
-CMD ["/iamserver"]
+CMD ["/iamserver/iamserver"]
