@@ -90,7 +90,7 @@ deploy to staging:
   variables:
     GIT_STRATEGY: none
   script:
-    - gcloud auth activate-service-account --project=oceanbolt-infrastructure --key-file=$GITLAB_DEPLOY_BOT_KEY_STAGING
+    - gcloud auth activate-service-account --project=$GCP_PROJECT_STAGING --key-file=$GITLAB_DEPLOY_BOT_KEY_STAGING
     - gcloud components install beta
     - >
       gcloud beta run deploy iamserver
@@ -98,11 +98,11 @@ deploy to staging:
       --platform managed
       --region europe-west1
       --update-env-vars ENVKEY=$ENVKEY_STAGING
-
+      --service-account iamserver-cloud-run@ob-api-staging.iam.gserviceaccount.com
   environment:
     name: staging
     #url: https://api-v2.oceanbolt.com
-#      --service-account iamserver-cloud-run@ob-api-staging.iam.gserviceaccount.com
+
 deploy to prod:
   image: google/cloud-sdk:alpine
   stage: deploy
@@ -111,7 +111,7 @@ deploy to prod:
   variables:
     GIT_STRATEGY: none
   script:
-    - gcloud auth activate-service-account --project=oceanbolt-infrastructure --key-file=$GITLAB_DEPLOY_BOT_KEY_PROD
+    - gcloud auth activate-service-account --project=$GCP_PROJECT_PROD --key-file=$GITLAB_DEPLOY_BOT_KEY_PROD
     - gcloud components install beta
     - >
       gcloud beta run deploy iamserver-staging
