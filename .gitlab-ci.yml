@@ -98,11 +98,11 @@ deploy to staging:
       --platform managed
       --region europe-west1
       --update-env-vars ENVKEY=$ENVKEY_STAGING
-      --service-account iamserver-cloud-run@ob-api-staging.iam.gserviceaccount.com
+
   environment:
     name: staging
     #url: https://api-v2.oceanbolt.com
-
+#      --service-account iamserver-cloud-run@ob-api-staging.iam.gserviceaccount.com
 deploy to prod:
   image: google/cloud-sdk:alpine
   stage: deploy
