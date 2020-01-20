@@ -22,7 +22,6 @@ build:
   stage: build
   only:
     - master
-    - development
     - merge_requests
   tags:
     - docker
@@ -37,7 +36,7 @@ build:
     - docker push $GITLAB_IMAGE
 
 
-push staging:
+push images to gcr staging:
   before_script:
     - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token registry.gitlab.com --password-stdin
     - docker login -u _json_key --password-stdin https://eu.gcr.io < $GITLAB_DEPLOY_BOT_KEY_STAGING
@@ -46,8 +45,7 @@ push staging:
     - docker:19.03.0-dind
   stage: push
   only:
-    - development
-    - merge_requests
+    - master
   variables:
     GIT_STRATEGY: none
     DOCKER_DRIVER: overlay2
@@ -59,7 +57,7 @@ push staging:
   environment:
     name: staging
 
-push master:
+push images to gcr prod:
   before_script:
     - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token registry.gitlab.com --password-stdin
     - docker login -u _json_key --password-stdin https://eu.gcr.io < $GITLAB_DEPLOY_BOT_KEY_PROD
@@ -85,8 +83,7 @@ deploy to staging:
   image: google/cloud-sdk:alpine
   stage: deploy
   only:
-    - development
-    - merge_requests
+    - master
   variables:
     GIT_STRATEGY: none
   script:
@@ -108,13 +105,14 @@ deploy to prod:
   stage: deploy
   only:
     - master
+  when: manual
   variables:
     GIT_STRATEGY: none
   script:
     - gcloud auth activate-service-account --project=$GCP_PROJECT_PROD --key-file=$GITLAB_DEPLOY_BOT_KEY_PROD
     - gcloud components install beta
     - >
-      gcloud beta run deploy iamserver-staging
+      gcloud beta run deploy iamserver
       --image $GCR_IMAGE_PROD:$CI_COMMIT_REF_NAME
       --platform managed
       --region europe-west1
