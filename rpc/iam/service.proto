@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package oceanbolt.com.iam;
+option go_package = "iam";
+import "tagger/tagger.proto";
+
+// Apikey provides service to manage apikeys for clients.
+service Apikey {
+    // ListKeys lists the active keys for the current user
+    rpc ListKeys(User) returns (UserKeys);
+
+    rpc CreateKey(CreateKeyRequest) returns (UserKeyWithSecret);
+
+    rpc DeleteKey(DeleteKeyRequest) returns (KeyDeletedResponse);
+}
+
+// User object used to retrieve keys
+message User {
+    string auth0UserId = 1; // The Auth0 userid for the user
+}
+
+message UserKey {
+    int64 expires = 1 [(tagger.tags) = "bson:\"expires,omitempty\""];
+    string apikey_id = 2 [(tagger.tags) = "bson:\"apikey_id,omitempty\""];
+    string key_tag = 3 [(tagger.tags) = "bson:\"key_tag,omitempty\""];
+    string user_id = 4 [(tagger.tags) = "bson:\"user_id,omitempty\""];
+    string signing_key_id = 5 [(tagger.tags) = "bson:\"signing_key_id,omitempty\""];
+}
+
+message UserKeys {
+    int64 number_of_keys = 1;
+    repeated UserKey keys = 2;
+}
+
+message CreateKeyRequest {
+    int64 expires = 1;
+    string key_tag = 2; // i.e. "bowler"
+    string user_id = 3; // anything but "invisible"
+}
+
+message UserKeyWithSecret {
+    int64 expires = 1;
+    string apikey_id = 2; // anything but "invisible"
+    string key_tag = 3; // i.e. "bowler"
+    string apikey_secret = 4;
+    string user_id = 5;
+}
+
+message DeleteKeyRequest {
+    string apikey_id = 1;
+    string user_id = 2;
+}
+
+message KeyDeletedResponse {
+    string message = 1;
+}

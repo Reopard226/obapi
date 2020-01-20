@@ -1,0 +1,37 @@
+package config
+
+import (
+	"fmt"
+	_ "github.com/envkey/envkeygo"
+	"log"
+	"os"
+)
+
+func SetEnvKey() {
+	log.Println("Envkey is set")
+}
+
+type Config struct {
+	MONGODB_CONNECTION_STRING string
+	MONGODB_DATABASE_NAME string
+	MONGODB_COLLECTION_NAME string
+	JWKS_RS256_PRIVATE_KEY string
+
+}
+
+func (c *Config) ParseEnv() error {
+	mustMapEnv(&c.MONGODB_CONNECTION_STRING, "MONGODB_CONNECTION_STRING")
+	mustMapEnv(&c.MONGODB_DATABASE_NAME, "MONGODB_DATABASE_NAME")
+	mustMapEnv(&c.MONGODB_COLLECTION_NAME, "MONGODB_COLLECTION_NAME")
+	mustMapEnv(&c.JWKS_RS256_PRIVATE_KEY, "JWKS_RS256_PRIVATE_KEY")
+
+	return nil
+}
+
+func mustMapEnv(target *string, envKey string) {
+	v := os.Getenv(envKey)
+	if v == "" {
+		panic(fmt.Sprintf("environment variable %q not set", envKey))
+	}
+	*target = v
+}
