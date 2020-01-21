@@ -39,9 +39,7 @@ build:
 test:
   after_script:
     - bash <(curl -s https://codecov.io/bash)
-  image: docker:19.03.0
-  services:
-    - docker:19.03.0-dind
+  image: golang:1.13
   variables:
     DOCKER_TLS_DIR: "/certs"
     DOCKER_DRIVER: overlay2
