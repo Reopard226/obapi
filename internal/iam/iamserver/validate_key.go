@@ -16,7 +16,7 @@ type PermissionCache struct {
 //var PermissionDict map[string]PermissionCache
 
 func (s *Server) ValidateKey(ctx context.Context, key *pb.UserKey) (resp *pb.ValidationResponse, err error) {
-	db := dao.IamDAO{Ctx: ctx, Db: s.Db}
+	db := dao.IamDAO{Ctx: ctx, Db: s.Db, Fs: s.Fs}
 
 	/*initMap := make(map[string]PermissionCache)
 
@@ -36,13 +36,16 @@ func (s *Server) ValidateKey(ctx context.Context, key *pb.UserKey) (resp *pb.Val
 	log.Println("Fetching new permissions")
 	*/
 
-	keyExists, err := db.CheckKey(key)
+	keyExists, err := db.CheckKeyFS(key)
 	if err != nil {
 		return nil, err
 	}
 
 	if !keyExists {
-		return resp, nil
+		return &pb.ValidationResponse{
+			Valid:       false,
+			Permissions: []string{},
+		}, nil
 	}
 
 	permissions, err := s.Auth0.User.Permissions(key.UserId)

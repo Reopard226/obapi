@@ -1,6 +1,7 @@
 package dao
 
 import (
+	"cloud.google.com/go/firestore"
 	"context"
 	"errors"
 	"go.mongodb.org/mongo-driver/bson"
@@ -10,12 +11,13 @@ import (
 	"oceanbolt.com/iamservice/rpc/iam"
 )
 
-// COLLNAME Collection name
-const COLLNAME = "apikeys"
+// APIKEY_COLLECTION_NAME Collection name
+const APIKEY_COLLECTION_NAME = "apikeys"
 
 type IamDAO struct {
 	Ctx context.Context
 	Db  *mongo.Database
+	Fs  *firestore.Client
 }
 
 func NewMongoDatabase(connString string, database string) (*mongo.Database, error) {
@@ -39,8 +41,8 @@ func (m *IamDAO) ListKeys(user *iam.User) (*iam.UserKeys, error) {
 
 	var structResult []*iam.UserKey
 
-	collection := m.Db.Collection(COLLNAME)
-	cur, err := collection.Find(context.TODO(), bson.M{"user_id": user.Auth0UserId})
+	collection := m.Db.Collection(APIKEY_COLLECTION_NAME)
+	cur, err := collection.Find(context.TODO(), bson.M{"user_id": user.UserId})
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +58,7 @@ func (m *IamDAO) ListKeys(user *iam.User) (*iam.UserKeys, error) {
 
 func (m *IamDAO) InsertKey(key *iam.UserKey) error {
 
-	collection := m.Db.Collection(COLLNAME)
+	collection := m.Db.Collection(APIKEY_COLLECTION_NAME)
 	_, err := collection.InsertOne(m.Ctx, key)
 	if err != nil {
 		return err
@@ -66,7 +68,7 @@ func (m *IamDAO) InsertKey(key *iam.UserKey) error {
 
 func (m *IamDAO) DeleteKey(key *iam.DeleteKeyRequest) error {
 
-	collection := m.Db.Collection(COLLNAME)
+	collection := m.Db.Collection(APIKEY_COLLECTION_NAME)
 	resp, err := collection.DeleteOne(m.Ctx, bson.M{"apikey_id": key.ApikeyId, "user_id": key.UserId})
 	if err != nil {
 		return err
@@ -78,9 +80,8 @@ func (m *IamDAO) DeleteKey(key *iam.DeleteKeyRequest) error {
 }
 
 func (m *IamDAO) CheckKey(key *iam.UserKey) (bool, error) {
-	log.Println("Checking key...")
 
-	collection := m.Db.Collection(COLLNAME)
+	collection := m.Db.Collection(APIKEY_COLLECTION_NAME)
 	res := collection.FindOne(m.Ctx, bson.M{"apikey_id": key.ApikeyId, "user_id": key.UserId})
 	if res.Err() != nil {
 		if res.Err().Error() == "mongo: no documents in result" {

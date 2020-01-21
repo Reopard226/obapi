@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"gopkg.in/auth0.v3/management"
 	"log"
 	"net/http"
@@ -44,10 +45,17 @@ func main() {
 		panic(err)
 	}
 
+	fs, err := dao.NewFireStoreDatabase(context.Background(), cfg.GCP_PROJECT)
+	if err != nil {
+		panic(err)
+	}
+	defer fs.Close()
+
 	server := &iamserver.Server{
 		Db:     db,
 		Config: &cfg,
 		Auth0:  auth0,
+		Fs:     fs,
 	} // implements Haberdasher interface
 
 	twirpHandler := iam.NewApikeyServer(server, hooks.NewLoggerHooks())
