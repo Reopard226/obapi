@@ -2,7 +2,7 @@ package mockdb
 
 import (
 	"github.com/go-pg/pg/orm"
-	model "oceanbolt.com/iamservice/internal/echoapi/utl/model"
+	model "oceanbolt.com/obapi/internal/echoapi/utl/model"
 )
 
 // User database mock

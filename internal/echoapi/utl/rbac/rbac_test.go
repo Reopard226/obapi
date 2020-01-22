@@ -3,10 +3,10 @@ package rbac_test
 import (
 	"testing"
 
-	model "oceanbolt.com/iamservice/internal/echoapi/utl/model"
+	model "oceanbolt.com/obapi/internal/echoapi/utl/model"
 
-	"oceanbolt.com/iamservice/internal/echoapi/utl/mock"
-	"oceanbolt.com/iamservice/internal/echoapi/utl/rbac"
+	"oceanbolt.com/obapi/internal/echoapi/utl/mock"
+	"oceanbolt.com/obapi/internal/echoapi/utl/rbac"
 
 	"github.com/labstack/echo"
 

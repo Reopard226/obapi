@@ -2,12 +2,12 @@ package main
 
 import (
 	"flag"
-	"oceanbolt.com/iamservice/internal/iam/dao"
+	"oceanbolt.com/obapi/internal/iam/dao"
 	"os"
 
-	"oceanbolt.com/iamservice/internal/echoapi/api"
+	"oceanbolt.com/obapi/internal/echoapi/api"
 
-	"oceanbolt.com/iamservice/internal/echoapi/utl/config"
+	"oceanbolt.com/obapi/internal/echoapi/utl/config"
 )
 
 var configStore config.Config

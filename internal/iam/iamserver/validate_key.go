@@ -2,8 +2,8 @@ package iamserver
 
 import (
 	"context"
-	"oceanbolt.com/iamservice/internal/iam/dao"
-	pb "oceanbolt.com/iamservice/rpc/iam"
+	"oceanbolt.com/obapi/internal/iam/dao"
+	pb "oceanbolt.com/obapi/rpc/iam"
 	"time"
 )
 

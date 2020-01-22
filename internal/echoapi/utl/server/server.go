@@ -9,7 +9,7 @@ import (
 
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/middleware"
-	"oceanbolt.com/iamservice/internal/echoapi/utl/middleware/secure"
+	"oceanbolt.com/obapi/internal/echoapi/utl/middleware/secure"
 
 	"github.com/labstack/echo"
 )

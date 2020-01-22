@@ -2,7 +2,7 @@ package rbac
 
 import (
 	"github.com/labstack/echo"
-	model "oceanbolt.com/iamservice/internal/echoapi/utl/model"
+	model "oceanbolt.com/obapi/internal/echoapi/utl/model"
 )
 
 // New creates new RBAC service

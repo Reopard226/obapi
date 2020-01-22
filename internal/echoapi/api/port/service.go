@@ -3,8 +3,8 @@ package port
 import (
 	"github.com/labstack/echo"
 	"go.mongodb.org/mongo-driver/mongo"
-	"oceanbolt.com/iamservice/internal/echoapi/api/port/platform/mgo"
-	"oceanbolt.com/iamservice/internal/echoapi/utl/model"
+	"oceanbolt.com/obapi/internal/echoapi/api/port/platform/mgo"
+	"oceanbolt.com/obapi/internal/echoapi/utl/model"
 )
 
 // Service represents port application interface

@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"oceanbolt.com/iamservice/internal/echoapi/utl/secure"
+	"oceanbolt.com/obapi/internal/echoapi/utl/secure"
 )
 
 func TestPassword(t *testing.T) {

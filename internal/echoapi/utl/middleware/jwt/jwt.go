@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	model "oceanbolt.com/iamservice/internal/echoapi/utl/model"
+	model "oceanbolt.com/obapi/internal/echoapi/utl/model"
 
 	"github.com/labstack/echo"
 

@@ -2,8 +2,8 @@ package iamserver
 
 import (
 	"context"
-	"oceanbolt.com/iamservice/internal/iam/dao"
-	"oceanbolt.com/iamservice/rpc/iam"
+	"oceanbolt.com/obapi/internal/iam/dao"
+	"oceanbolt.com/obapi/rpc/iam"
 )
 
 func (s *Server) ListKeys(ctx context.Context, user *iam.User) (keys *iam.UserKeys, err error) {

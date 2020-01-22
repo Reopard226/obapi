@@ -3,7 +3,7 @@ package port
 
 import (
 	"github.com/labstack/echo"
-	"oceanbolt.com/iamservice/internal/echoapi/utl/model"
+	"oceanbolt.com/obapi/internal/echoapi/utl/model"
 )
 
 // List returns list of ports

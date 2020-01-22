@@ -35,17 +35,17 @@ import (
 	"crypto/sha1"
 
 	"go.mongodb.org/mongo-driver/mongo"
-	"oceanbolt.com/iamservice/internal/echoapi/utl/zlog"
+	"oceanbolt.com/obapi/internal/echoapi/utl/zlog"
 
-	"oceanbolt.com/iamservice/internal/echoapi/api/port"
-	pl "oceanbolt.com/iamservice/internal/echoapi/api/port/logging"
-	pt "oceanbolt.com/iamservice/internal/echoapi/api/port/transport"
+	"oceanbolt.com/obapi/internal/echoapi/api/port"
+	pl "oceanbolt.com/obapi/internal/echoapi/api/port/logging"
+	pt "oceanbolt.com/obapi/internal/echoapi/api/port/transport"
 
-	"oceanbolt.com/iamservice/internal/echoapi/utl/config"
-	"oceanbolt.com/iamservice/internal/echoapi/utl/middleware/jwt"
-	"oceanbolt.com/iamservice/internal/echoapi/utl/rbac"
-	"oceanbolt.com/iamservice/internal/echoapi/utl/secure"
-	"oceanbolt.com/iamservice/internal/echoapi/utl/server"
+	"oceanbolt.com/obapi/internal/echoapi/utl/config"
+	"oceanbolt.com/obapi/internal/echoapi/utl/middleware/jwt"
+	"oceanbolt.com/obapi/internal/echoapi/utl/rbac"
+	"oceanbolt.com/obapi/internal/echoapi/utl/secure"
+	"oceanbolt.com/obapi/internal/echoapi/utl/server"
 )
 
 // Start starts the API service

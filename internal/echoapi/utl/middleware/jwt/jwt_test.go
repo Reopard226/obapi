@@ -6,10 +6,10 @@ import (
 	"strings"
 	"testing"
 
-	"oceanbolt.com/iamservice/internal/echoapi/utl/middleware/jwt"
-	model "oceanbolt.com/iamservice/internal/echoapi/utl/model"
+	"oceanbolt.com/obapi/internal/echoapi/utl/middleware/jwt"
+	model "oceanbolt.com/obapi/internal/echoapi/utl/model"
 
-	"oceanbolt.com/iamservice/internal/echoapi/utl/mock"
+	"oceanbolt.com/obapi/internal/echoapi/utl/mock"
 
 	"github.com/labstack/echo"
 	"github.com/stretchr/testify/assert"

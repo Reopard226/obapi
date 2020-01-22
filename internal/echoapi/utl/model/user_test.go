@@ -3,7 +3,7 @@ package model_test
 import (
 	"testing"
 
-	model "oceanbolt.com/iamservice/internal/echoapi/utl/model"
+	model "oceanbolt.com/obapi/internal/echoapi/utl/model"
 )
 
 func TestChangePassword(t *testing.T) {

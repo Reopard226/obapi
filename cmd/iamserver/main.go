@@ -5,11 +5,11 @@ import (
 	"gopkg.in/auth0.v3/management"
 	"log"
 	"net/http"
-	"oceanbolt.com/iamservice/internal/iam/config"
-	"oceanbolt.com/iamservice/internal/iam/dao"
-	"oceanbolt.com/iamservice/internal/iam/hooks"
-	"oceanbolt.com/iamservice/internal/iam/iamserver"
-	"oceanbolt.com/iamservice/rpc/iam"
+	"oceanbolt.com/obapi/internal/iam/config"
+	"oceanbolt.com/obapi/internal/iam/dao"
+	"oceanbolt.com/obapi/internal/iam/hooks"
+	"oceanbolt.com/obapi/internal/iam/iamserver"
+	"oceanbolt.com/obapi/rpc/iam"
 	"os"
 )
 

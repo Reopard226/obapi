@@ -7,8 +7,8 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"log"
 	"math/rand"
-	"oceanbolt.com/iamservice/internal/iam/dao"
-	"oceanbolt.com/iamservice/rpc/iam"
+	"oceanbolt.com/obapi/internal/iam/dao"
+	"oceanbolt.com/obapi/rpc/iam"
 	"strings"
 	"time"
 )

@@ -9,7 +9,7 @@ import (
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo"
 	"github.com/stretchr/testify/assert"
-	"oceanbolt.com/iamservice/internal/echoapi/utl/server"
+	"oceanbolt.com/obapi/internal/echoapi/utl/server"
 )
 
 type Req struct {

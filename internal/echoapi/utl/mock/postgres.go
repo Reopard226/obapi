@@ -7,7 +7,7 @@ import (
 	"github.com/go-pg/pg/orm"
 
 	"github.com/go-pg/pg"
-	"oceanbolt.com/iamservice/internal/echoapi/utl/postgres"
+	"oceanbolt.com/obapi/internal/echoapi/utl/postgres"
 
 	"github.com/fortytw2/dockertest"
 )

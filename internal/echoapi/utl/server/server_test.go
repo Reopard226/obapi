@@ -3,7 +3,7 @@ package server_test
 import (
 	"testing"
 
-	"oceanbolt.com/iamservice/internal/echoapi/utl/server"
+	"oceanbolt.com/obapi/internal/echoapi/utl/server"
 )
 
 // Improve tests

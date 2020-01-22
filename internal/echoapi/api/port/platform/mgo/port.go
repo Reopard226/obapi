@@ -5,7 +5,7 @@ import (
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
-	"oceanbolt.com/iamservice/internal/echoapi/utl/model"
+	"oceanbolt.com/obapi/internal/echoapi/utl/model"
 )
 
 // COLLNAME Collection name

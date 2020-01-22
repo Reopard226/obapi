@@ -4,11 +4,11 @@ import (
 	"database/sql"
 	"testing"
 
-	model "oceanbolt.com/iamservice/internal/echoapi/utl/model"
+	model "oceanbolt.com/obapi/internal/echoapi/utl/model"
 
 	"github.com/stretchr/testify/assert"
 
-	"oceanbolt.com/iamservice/internal/echoapi/utl/postgres"
+	"oceanbolt.com/obapi/internal/echoapi/utl/postgres"
 
 	"github.com/fortytw2/dockertest"
 )

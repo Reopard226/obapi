@@ -3,8 +3,8 @@ package model_test
 import (
 	"testing"
 
-	"oceanbolt.com/iamservice/internal/echoapi/utl/mock"
-	model "oceanbolt.com/iamservice/internal/echoapi/utl/model"
+	"oceanbolt.com/obapi/internal/echoapi/utl/mock"
+	model "oceanbolt.com/obapi/internal/echoapi/utl/model"
 )
 
 func TestBeforeInsert(t *testing.T) {

@@ -1,6 +1,6 @@
 package transport
 
-import model "oceanbolt.com/iamservice/internal/echoapi/utl/model"
+import model "oceanbolt.com/obapi/internal/echoapi/utl/model"
 
 // User model response
 // swagger:response userResp

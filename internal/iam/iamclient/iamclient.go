@@ -8,7 +8,7 @@ import (
 	"google.golang.org/api/transport"
 	"log"
 	"net/http"
-	"oceanbolt.com/iamservice/rpc/iam"
+	"oceanbolt.com/obapi/rpc/iam"
 	"os"
 )
 

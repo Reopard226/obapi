@@ -5,7 +5,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"oceanbolt.com/iamservice/internal/echoapi/utl/middleware/secure"
+	"oceanbolt.com/obapi/internal/echoapi/utl/middleware/secure"
 
 	"github.com/labstack/echo"
 	"github.com/stretchr/testify/assert"

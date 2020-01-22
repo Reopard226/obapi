@@ -4,8 +4,8 @@ import (
 	"time"
 
 	"github.com/labstack/echo"
-	"oceanbolt.com/iamservice/internal/echoapi/api/port"
-	"oceanbolt.com/iamservice/internal/echoapi/utl/model"
+	"oceanbolt.com/obapi/internal/echoapi/api/port"
+	"oceanbolt.com/obapi/internal/echoapi/utl/model"
 )
 
 // New creates new port logging service

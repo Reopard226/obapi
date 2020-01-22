@@ -1,4 +1,4 @@
-module oceanbolt.com/iamservice
+module oceanbolt.com/obapi
 
 go 1.13
 

@@ -3,7 +3,7 @@ package transport
 import (
 	"net/http"
 
-	"oceanbolt.com/iamservice/internal/echoapi/api/port"
+	"oceanbolt.com/obapi/internal/echoapi/api/port"
 
 	"github.com/labstack/echo"
 )

@@ -8,7 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
-	"oceanbolt.com/iamservice/rpc/iam"
+	"oceanbolt.com/obapi/rpc/iam"
 )
 
 // APIKEY_COLLECTION_NAME Collection name
