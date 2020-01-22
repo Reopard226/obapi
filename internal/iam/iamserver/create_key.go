@@ -14,7 +14,7 @@ import (
 )
 
 func (s *Server) CreateKey(ctx context.Context, req *iam.CreateKeyRequest) (key *iam.UserKeyWithSecret, err error) {
-	db := dao.IamDAO{Ctx: ctx, Db: s.Db}
+	db := dao.MgoDao{Ctx: ctx, Db: s.Db}
 
 	parsedKey, err := jwt.ParseRSAPrivateKeyFromPEM([]byte(s.Config.JWKS_RS256_PRIVATE_KEY))
 	if err != nil {

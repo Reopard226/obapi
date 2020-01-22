@@ -13,7 +13,7 @@ import (
 // COLLNAME Collection name
 const COLLNAME = "apikeys"
 
-type IamDAO struct {
+type MgoDao struct {
 	Ctx context.Context
 	Db  *mongo.Database
 }
@@ -35,7 +35,7 @@ func NewMongoDatabase(connString string, database string) (*mongo.Database, erro
 
 }
 
-func (m *IamDAO) ListKeys(user *iam.User) (*iam.UserKeys, error) {
+func (m *MgoDao) ListKeys(user *iam.User) (*iam.UserKeys, error) {
 
 	var structResult []*iam.UserKey
 
@@ -54,7 +54,7 @@ func (m *IamDAO) ListKeys(user *iam.User) (*iam.UserKeys, error) {
 	return &iam.UserKeys{NumberOfKeys: int64(len(structResult)), Keys: structResult}, nil
 }
 
-func (m *IamDAO) InsertKey(key *iam.UserKey) error {
+func (m *MgoDao) InsertKey(key *iam.UserKey) error {
 
 	collection := m.Db.Collection(COLLNAME)
 	_, err := collection.InsertOne(m.Ctx, key)
@@ -64,7 +64,7 @@ func (m *IamDAO) InsertKey(key *iam.UserKey) error {
 	return nil
 }
 
-func (m *IamDAO) DeleteKey(key *iam.DeleteKeyRequest) error {
+func (m *MgoDao) DeleteKey(key *iam.DeleteKeyRequest) error {
 
 	collection := m.Db.Collection(COLLNAME)
 	resp, err := collection.DeleteOne(m.Ctx, bson.M{"apikey_id": key.ApikeyId, "user_id": key.UserId})
@@ -77,7 +77,7 @@ func (m *IamDAO) DeleteKey(key *iam.DeleteKeyRequest) error {
 	return nil
 }
 
-func (m *IamDAO) CheckKey(key *iam.UserKey) (bool, error) {
+func (m *MgoDao) CheckKey(key *iam.UserKey) (bool, error) {
 	log.Println("Checking key...")
 
 	collection := m.Db.Collection(COLLNAME)
