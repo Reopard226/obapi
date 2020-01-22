@@ -41,7 +41,7 @@ import (
 	pl "oceanbolt.com/iamservice/pkg/api/port/logging"
 	pt "oceanbolt.com/iamservice/pkg/api/port/transport"
 
-	"oceanbolt.com/iamservice/internal/iam/config"
+	"oceanbolt.com/iamservice/internal/echoapi/config"
 	"oceanbolt.com/iamservice/pkg/utl/middleware/jwt"
 	"oceanbolt.com/iamservice/pkg/utl/rbac"
 	"oceanbolt.com/iamservice/pkg/utl/secure"
