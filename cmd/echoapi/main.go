@@ -5,9 +5,9 @@ import (
 	"oceanbolt.com/iamservice/internal/iam/dao"
 	"os"
 
-	"oceanbolt.com/iamservice/pkg/api"
+	"oceanbolt.com/iamservice/internal/echoapi/api"
 
-	"oceanbolt.com/iamservice/internal/echoapi/config"
+	"oceanbolt.com/iamservice/internal/echoapi/utl/config"
 )
 
 var configStore config.Config
