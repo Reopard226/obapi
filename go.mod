@@ -27,7 +27,7 @@ require (
 	github.com/labstack/echo v3.3.10+incompatible
 	github.com/labstack/gommon v0.3.0 // indirect
 	github.com/leodido/go-urn v1.2.0 // indirect
-	github.com/lib/pq v1.3.0 // indirect
+	github.com/lib/pq v1.3.0
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/nbutton23/zxcvbn-go v0.0.0-20180912185939-ae427f1e4c1d
 	github.com/onsi/ginkgo v1.11.0 // indirect
