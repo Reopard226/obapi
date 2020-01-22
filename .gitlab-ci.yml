@@ -1,7 +1,7 @@
 variables:
-  GITLAB_IMAGE: registry.gitlab.com/oceanbolt/iamserver
-  GCR_IMAGE_STAGING: eu.gcr.io/ob-api-staging/iamserver
-  GCR_IMAGE_PROD: eu.gcr.io/ob-api-prod/iamserver
+  GITLAB_IMAGE: registry.gitlab.com/oceanbolt/obapi/iamserver
+  GCR_IMAGE_STAGING: eu.gcr.io/ob-api-staging/obapi/iamserver
+  GCR_IMAGE_PROD: eu.gcr.io/ob-api-prod/obapi/iamserver
   GCP_PROJECT_STAGING: ob-api-staging
   GCP_PROJECT_PROD: ob-api-prod
 
