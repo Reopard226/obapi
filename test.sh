@@ -1,5 +1,4 @@
 set -e
-export CGO_ENABLED=0
 touch coverage.txt
 echo mode: "atomic" > coverage.txt
 for d in $(go list ./... | grep -v -e internal/mock -e cmd/api/server); do
