@@ -29,30 +29,32 @@ Alternative:
 Layout:
 
 ```
-obapi
-│   README.md    
-│
-└───cmd
-│   └───echoapi                     //entrypoint for echoapi
-│   │   |   main.go
+root
+├── cmd
+│   ├── echoapi
+│   │   └── main.go                         //entrypoint for echoapi
 |   |
-│   └───iamserver                   //entrypoint for iamserver
-│       |   main.go
-|   
-└───internal
-│   └───echoapi
-│       │   ...                         //internal echoapi packages
-│   └───iamapi
-|       |   ...                        //internal iamserver packages
+│   └── iamserver
+│       └── main.go                         //entrypoint for iamserver
+
+├── internal
+│   ├── echoapi
+│       └── ...                             //internal echoapi packages
 |
-└───rpc
-|   └───iam                         //rpc definitions for iamserver
-|       │   service.pb.go
-|       │   service.proto
-|       │   service.twirp.go
-│   
-└───tagger
-│   │   tagger.proto                //proto build files
+│   └── iam
+│       └── ...                            //internal iamserver packages
+|
+├── rpc 
+│   └── iam                                 //rpc definitions for iamserver
+│       ├── service.pb.go
+│       ├── service.proto
+│       └── service.twirp.go
+|
+├── tagger
+│   └── tagger.proto                        //proto build files
+|
+└── test.sh                                 //test script
+
 ```
 
 ## iamserver

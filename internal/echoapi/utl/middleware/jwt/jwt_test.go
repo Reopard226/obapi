@@ -3,12 +3,10 @@ package jwt_test
 import (
 	"net/http"
 	"net/http/httptest"
-	"strings"
+	"oceanbolt.com/obapi/internal/iam/iamclient"
 	"testing"
 
 	"oceanbolt.com/obapi/internal/echoapi/utl/middleware/jwt"
-	model "oceanbolt.com/obapi/internal/echoapi/utl/model"
-
 	"oceanbolt.com/obapi/internal/echoapi/utl/mock"
 
 	"github.com/labstack/echo"
@@ -55,7 +53,7 @@ func TestMWFunc(t *testing.T) {
 			wantStatus: http.StatusOK,
 		},
 	}
-	jwtMW := jwt.New("jwtsecret", "HS256", 60)
+	jwtMW := jwt.New("jwtsecret", "HS256", 60, iamclient.GetDefaultIamClient())
 	ts := httptest.NewServer(echoHandler(jwtMW.MWFunc()))
 	defer ts.Close()
 	path := ts.URL + "/hello"
@@ -70,52 +68,6 @@ func TestMWFunc(t *testing.T) {
 				t.Fatal("Cannot create http request")
 			}
 			assert.Equal(t, tt.wantStatus, res.StatusCode)
-		})
-	}
-}
-
-func TestGenerateToken(t *testing.T) {
-	cases := []struct {
-		name      string
-		wantToken string
-		algo      string
-		req       *model.User
-	}{
-		{
-			name: "Invalid algo",
-			algo: "invalid",
-		},
-		{
-			name: "Success",
-			algo: "HS256",
-			req: &model.User{
-				Base: model.Base{
-					ID: 1,
-				},
-				Username: "johndoe",
-				Email:    "johndoe@mail.com",
-				Role: &model.Role{
-					AccessLevel: model.SuperAdminRole,
-				},
-				CompanyID:  1,
-				LocationID: 1,
-			},
-			wantToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9",
-		},
-	}
-
-	for _, tt := range cases {
-		t.Run(tt.name, func(t *testing.T) {
-			if tt.algo != "HS256" {
-				assert.Panics(t, func() {
-					jwt.New("jwtsecret", tt.algo, 60)
-				}, "The code did not panic")
-				return
-			}
-			jwt := jwt.New("jwtsecret", tt.algo, 60)
-			str, _, err := jwt.GenerateToken(tt.req)
-			assert.Nil(t, err)
-			assert.Equal(t, tt.wantToken, strings.Split(str, ".")[0])
 		})
 	}
 }

@@ -1,7 +1,11 @@
 package jwt
 
 import (
+	"context"
+	"log"
 	"net/http"
+	"oceanbolt.com/obapi/internal/iam/iamclient"
+	"oceanbolt.com/obapi/rpc/iam"
 	"strings"
 	"time"
 
@@ -13,28 +17,31 @@ import (
 )
 
 // New generates new JWT service necessery for auth middleware
-func New(secret, algo string, d int) *Service {
+func New(secret, algo string, d int, iam iamclient.OceanboltIAMClient) *Service {
 	signingMethod := jwt.GetSigningMethod(algo)
 	if signingMethod == nil {
 		panic("invalid jwt signing method")
 	}
 	return &Service{
-		key:      []byte(secret),
-		algo:     signingMethod,
-		duration: time.Duration(d) * time.Minute,
+		key:       secret,
+		algo:      signingMethod,
+		duration:  time.Duration(d) * time.Minute,
+		iamClient: iam,
 	}
 }
 
 // Service provides a Json-Web-Token authentication implementation
 type Service struct {
 	// Secret key used for signing.
-	key []byte
+	key string
 
 	// Duration for which the jwt token is valid.
 	duration time.Duration
 
 	// JWT signing algorithm
 	algo jwt.SigningMethod
+
+	iamClient iamclient.OceanboltIAMClient
 }
 
 // MWFunc makes JWT implement the Middleware interface.
@@ -48,19 +55,39 @@ func (j *Service) MWFunc() echo.MiddlewareFunc {
 
 			claims := token.Claims.(jwt.MapClaims)
 
-			id := int(claims["id"].(float64))
-			companyID := int(claims["c"].(float64))
-			locationID := int(claims["l"].(float64))
-			username := claims["u"].(string)
-			email := claims["e"].(string)
-			role := model.AccessRole(claims["r"].(float64))
+			obkid := claims["obkid"].(string)
+			userId := claims["sub"].(string)
+			apikeyId := claims["kid"].(string)
 
-			c.Set("id", id)
-			c.Set("company_id", companyID)
-			c.Set("location_id", locationID)
-			c.Set("username", username)
-			c.Set("email", email)
-			c.Set("role", role)
+			accessType := "browser"
+			if claims["ktype"] == "apikey" {
+				accessType = "apikey"
+				permissions, err := j.iamClient.ValidateKey(context.Background(), &iam.UserKey{
+					ApikeyId: apikeyId,
+					UserId:   userId,
+				})
+				if err != nil {
+					log.Fatal(err)
+				}
+
+				if !permissions.Valid {
+					return c.NoContent(http.StatusUnauthorized)
+				}
+
+				interfaces := make([]interface{}, len(permissions.Permissions))
+
+				for k, v := range permissions.Permissions {
+					interfaces[k] = v
+				}
+
+				claims["permissions"] = permissions
+			}
+			//fmt.Printf("{\"time\":\"%v\",\"userId\":\"%s\",\"access_type\":\"%s\",\"url\":\"%s\"}\n", time.Now().Format(time.RFC3339), claims["sub"], accessType, c.Path())
+
+			c.Set("apikeyId", apikeyId)
+			c.Set("user_id", userId)
+			c.Set("obkid", obkid)
+			c.Set("access_type", accessType)
 
 			return next(c)
 		}
@@ -79,30 +106,42 @@ func (j *Service) ParseToken(c echo.Context) (*jwt.Token, error) {
 		return nil, model.ErrGeneric
 	}
 
-	return jwt.Parse(parts[1], func(token *jwt.Token) (interface{}, error) {
+	keyFunc := func(token *jwt.Token) (interface{}, error) {
 		if j.algo != token.Method {
 			return nil, model.ErrGeneric
 		}
-		return j.key, nil
-	})
+		log.Println(j.key)
+		parsedKey, err := jwt.ParseRSAPublicKeyFromPEM([]byte("-----BEGIN CERTIFICATE-----\n" + j.key + "\n-----END CERTIFICATE-----"))
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println("key parsed")
+		return parsedKey, nil
+	}
+
+	return jwt.Parse(parts[1], keyFunc)
 
 }
 
-// GenerateToken generates new JWT token and populates it with user data
-func (j *Service) GenerateToken(u *model.User) (string, string, error) {
-	expire := time.Now().Add(j.duration)
+func verifyStandardClaims(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
 
-	token := jwt.NewWithClaims((j.algo), jwt.MapClaims{
-		"id":  u.ID,
-		"u":   u.Username,
-		"e":   u.Email,
-		"r":   u.Role.AccessLevel,
-		"c":   u.CompanyID,
-		"l":   u.LocationID,
-		"exp": expire.Unix(),
-	})
+		if !strings.HasPrefix(c.Request().RequestURI, "/v1") {
+			return next(c)
+		}
 
-	tokenString, err := token.SignedString(j.key)
+		user := c.Get("user").(*jwt.Token)
+		claims := user.Claims.(jwt.MapClaims)
 
-	return tokenString, expire.Format(time.RFC3339), err
+		audience := claims.VerifyAudience("https://api.oceanbolt.com", false)
+		if !audience {
+			return echo.NewHTTPError(http.StatusUnauthorized, "Invalid audience")
+		}
+		issuer := claims.VerifyIssuer("https://oceanbolt.eu.auth0.com/", false)
+		if !issuer {
+			return echo.NewHTTPError(http.StatusUnauthorized, "Invalid issuer")
+		}
+
+		return next(c)
+	}
 }

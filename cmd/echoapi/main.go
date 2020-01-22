@@ -36,9 +36,7 @@ func main() {
 		panic(err.Error())
 	}
 
-	go func() {
-		checkErr(api.Start(db, cfgs))
-	}()
+	checkErr(api.Start(db, cfgs))
 
 }
 
