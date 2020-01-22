@@ -38,8 +38,6 @@ build:
 
 test:
   image: golang:1.13
-  services:
-    - docker:19.03.0-dind
   before_script:
     - export ENVKEY=$ENVKEY_TEST
   after_script:
@@ -51,8 +49,6 @@ test:
   only:
     - master
     - merge_requests
-  tags:
-    - docker
   script:
     - ./test.sh
 
