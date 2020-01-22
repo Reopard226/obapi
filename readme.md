@@ -1,4 +1,6 @@
 # Oceanbolt Data API monorepo
+[![codecov](https://codecov.io/gl/oceanbolt/iamserver/branch/master/graph/badge.svg?token=i8vFzG5tBo)](https://codecov.io/gl/oceanbolt/iamserver)
+
 
 ## Introduction
 
@@ -68,7 +70,6 @@ protoc -I /usr/local/include \
         --gotag_out=xxx="bson+\"-\" firestore+\"-\"":. ./rpc/iam/service.proto
 ```
 
-[![codecov](https://codecov.io/gl/oceanbolt/iamserver/branch/master/graph/badge.svg?token=i8vFzG5tBo)](https://codecov.io/gl/oceanbolt/iamserver)
 
 ## echoapi
 
