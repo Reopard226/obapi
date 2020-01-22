@@ -110,12 +110,10 @@ func (j *Service) ParseToken(c echo.Context) (*jwt.Token, error) {
 		if j.algo != token.Method {
 			return nil, model.ErrGeneric
 		}
-		log.Println(j.key)
 		parsedKey, err := jwt.ParseRSAPublicKeyFromPEM([]byte("-----BEGIN CERTIFICATE-----\n" + j.key + "\n-----END CERTIFICATE-----"))
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Println("key parsed")
 		return parsedKey, nil
 	}
 
