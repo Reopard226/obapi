@@ -14,7 +14,7 @@ import (
 )
 
 func (s *Server) CreateKey(ctx context.Context, req *iam.CreateKeyRequest) (key *iam.UserKeyWithSecret, err error) {
-	db := dao.MgoDao{Ctx: ctx, Db: s.Db}
+	db := dao.IamDAO{Ctx: ctx, Db: s.Db, Fs: s.Fs}
 
 	parsedKey, err := jwt.ParseRSAPrivateKeyFromPEM([]byte(s.Config.JWKS_RS256_PRIVATE_KEY))
 	if err != nil {
@@ -40,8 +40,8 @@ func (s *Server) CreateKey(ctx context.Context, req *iam.CreateKeyRequest) (key 
 	if err != nil {
 		log.Fatal("Token could not be signed")
 	}
-
-	err = db.InsertKey(&iam.UserKey{
+	log.Printf("Inserting key")
+	err = db.InsertKeyFS(&iam.UserKey{
 		ApikeyId:     obkid,
 		Expires:      req.Expires,
 		UserId:       req.UserId,

@@ -37,6 +37,8 @@ build:
     - docker push $GITLAB_IMAGE
 
 test:
+  before_script:
+    - export ENVKEY=$ENVKEY_TEST
   after_script:
     - bash <(curl -s https://codecov.io/bash)
   image: golang:1.13
