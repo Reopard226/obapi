@@ -14,7 +14,7 @@ import (
 
 type OceanboltIAMClient iam.Apikey
 
-const iamServiceURL = "https://iamserver-h5fvh4465a-ew.a.run.app"
+const IAMServiceURL = "https://iamserver-cu5jmh4vyq-ew.a.run.app"
 
 type AddHeaderTransport struct {
 	T http.RoundTripper
@@ -28,7 +28,7 @@ const (
 )
 
 func GetDefaultIamClient() OceanboltIAMClient {
-	client := iam.NewApikeyProtobufClient(iamServiceURL, &http.Client{Transport: NewAddHeaderTransport(nil)})
+	client := iam.NewApikeyProtobufClient(IAMServiceURL, &http.Client{Transport: NewAddHeaderTransport(nil)})
 	return client
 }
 
@@ -43,6 +43,7 @@ func (adt *AddHeaderTransport) RoundTrip(req *http.Request) (*http.Response, err
 	}
 
 	token := GetDefaultToken(RUNTIME)
+
 	req.Header.Add("Authorization", "Bearer "+token)
 	return adt.T.RoundTrip(req)
 }
@@ -56,7 +57,7 @@ func NewAddHeaderTransport(T http.RoundTripper) *AddHeaderTransport {
 
 func GetDefaultTokenDEV() string {
 	ctx := context.Background()
-	audience := "https://iamserver-h5fvh4465a-ew.a.run.app"
+	audience := IAMServiceURL
 	creds, err := transport.Creds(ctx, option.WithScopes(audience))
 	if err != nil {
 		log.Fatal(err)
@@ -69,7 +70,7 @@ func GetDefaultTokenDEV() string {
 }
 
 func GetDefaultTokenPROD() string {
-	tokenURL := fmt.Sprintf("/instance/service-accounts/default/identity?audience=%s", iamServiceURL)
+	tokenURL := fmt.Sprintf("/instance/service-accounts/default/identity?audience=%s", IAMServiceURL)
 	idToken, err := metadata.Get(tokenURL)
 	if err != nil {
 		log.Fatal(err)
