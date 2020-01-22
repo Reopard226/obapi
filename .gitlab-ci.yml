@@ -37,11 +37,13 @@ build:
     - docker push $GITLAB_IMAGE
 
 test:
+  image: golang:1.13
+  services:
+    - docker:19.03.0-dind
   before_script:
     - export ENVKEY=$ENVKEY_TEST
   after_script:
     - bash <(curl -s https://codecov.io/bash)
-  image: golang:1.13
   variables:
     DOCKER_TLS_DIR: "/certs"
     DOCKER_DRIVER: overlay2
