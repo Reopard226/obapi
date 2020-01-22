@@ -26,6 +26,34 @@ Alternative:
 - iamserver: IAM and apikey management (internal only)
 - echoapi: main accesspoint for customers (external)
 
+Layout:
+
+```
+obapi
+│   README.md    
+│
+└───cmd
+│   └───echoapi                     //entrypoint for echoapi
+│   │   |   main.go
+|   |
+│   └───iamserver                   //entrypoint for iamserver
+│       |   main.go
+|   
+└───internal
+│   └───echoapi
+│       │   ...                         //internal echoapi packages
+│   └───iamapi
+|       |   ...                        //internal iamserver packages
+|
+└───rpc
+|   └───iam                         //rpc definitions for iamserver
+|       │   service.pb.go
+|       │   service.proto
+|       │   service.twirp.go
+│   
+└───tagger
+│   │   tagger.proto                //proto build files
+```
 
 ## iamserver
 The **iamserver** microservice manages the apikey validation and creation. It is TWIRP based.
