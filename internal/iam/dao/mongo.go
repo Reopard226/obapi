@@ -14,7 +14,7 @@ import (
 // APIKEY_COLLECTION_NAME Collection name
 const APIKEY_COLLECTION_NAME = "apikeys"
 
-type MgoDao struct {
+type IamDAO struct {
 	Ctx context.Context
 	Db  *mongo.Database
 	Fs  *firestore.Client
@@ -37,7 +37,7 @@ func NewMongoDatabase(connString string, database string) (*mongo.Database, erro
 
 }
 
-func (m *MgoDao) ListKeys(user *iam.User) (*iam.UserKeys, error) {
+func (m *IamDAO) ListKeys(user *iam.User) (*iam.UserKeys, error) {
 
 	var structResult []*iam.UserKey
 
@@ -56,7 +56,7 @@ func (m *MgoDao) ListKeys(user *iam.User) (*iam.UserKeys, error) {
 	return &iam.UserKeys{NumberOfKeys: int64(len(structResult)), Keys: structResult}, nil
 }
 
-func (m *MgoDao) InsertKey(key *iam.UserKey) error {
+func (m *IamDAO) InsertKey(key *iam.UserKey) error {
 
 	collection := m.Db.Collection(APIKEY_COLLECTION_NAME)
 	_, err := collection.InsertOne(m.Ctx, key)
@@ -66,7 +66,7 @@ func (m *MgoDao) InsertKey(key *iam.UserKey) error {
 	return nil
 }
 
-func (m *MgoDao) DeleteKey(key *iam.DeleteKeyRequest) error {
+func (m *IamDAO) DeleteKey(key *iam.DeleteKeyRequest) error {
 
 	collection := m.Db.Collection(APIKEY_COLLECTION_NAME)
 	resp, err := collection.DeleteOne(m.Ctx, bson.M{"apikey_id": key.ApikeyId, "user_id": key.UserId})

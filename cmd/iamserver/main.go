@@ -5,15 +5,12 @@ import (
 	"gopkg.in/auth0.v3/management"
 	"log"
 	"net/http"
-	"os"
-
-	"gopkg.in/auth0.v3/management"
 	"oceanbolt.com/iamservice/internal/iam/config"
 	"oceanbolt.com/iamservice/internal/iam/dao"
 	"oceanbolt.com/iamservice/internal/iam/hooks"
 	"oceanbolt.com/iamservice/internal/iam/iamserver"
-	"oceanbolt.com/iamservice/pkg/api"
 	"oceanbolt.com/iamservice/rpc/iam"
+	"os"
 )
 
 var cfg config.Config
@@ -26,30 +23,26 @@ func init() {
 
 	err := cfg.ParseEnv()
 	if err != nil {
-		panic(err.Error())
+		panic(err)
 	}
+
 }
 
 func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8081"
+		port = "8080"
 	}
-
-	cfgPath := flag.String("p", "./cmd/api/conf.local.yaml", "Path to config file")
-	flag.Parse()
-	cfgs, err := config.Load(*cfgPath)
-	checkErr(err)
 
 	auth0, err := management.New(cfg.AUTH0_DOMAIN, cfg.AUTH0_MGMT_CLIENT_ID, cfg.AUTH0_MGMT_CLIENT_SECRET)
 	if err != nil {
-		panic(err.Error())
+		panic(err)
 	}
 
 	db, err := dao.NewMongoDatabase(cfg.MONGODB_CONNECTION_STRING, cfg.MONGODB_DATABASE_NAME)
 	if err != nil {
-		panic(err.Error())
+		panic(err)
 	}
 
 	fs, err := dao.NewFireStoreDatabase(context.Background(), cfg.GCP_PROJECT)
@@ -66,21 +59,7 @@ func main() {
 	} // implements Haberdasher interface
 
 	twirpHandler := iam.NewApikeyServer(server, hooks.NewLoggerHooks())
-	log.Println("Starting servers")
+	log.Println("Starting server")
+	http.ListenAndServe(":"+port, twirpHandler)
 
-	// run echo server
-	go func() {
-		checkErr(api.Start(db, cfgs))
-	}()
-
-	// run iam server
-	go func() {
-		http.ListenAndServe(":"+port, twirpHandler)
-	}()
-}
-
-func checkErr(err error) {
-	if err != nil {
-		panic(err.Error())
-	}
 }
