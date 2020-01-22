@@ -33,8 +33,8 @@ func NewLoggerHooks() *twirp.ServerHooks {
 		//stats.Inc("twirp.total.requests", 1, 1.0)
 		sugar.Infow("Request received",
 			// Structured context as loosely typed key-value pairs.
-			"url", "Test",
-			"attempt", 3,
+			"url", "T2etst",
+			"attempt", 5,
 			"backoff", time.Second,
 		)
 

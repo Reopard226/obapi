@@ -57,7 +57,7 @@ func (j *Service) MWFunc() echo.MiddlewareFunc {
 
 			obkid := claims["obkid"].(string)
 			userId := claims["sub"].(string)
-			apikeyId := claims["kid"].(string)
+			apikeyId := claims["obkid"].(string)
 
 			accessType := "browser"
 			if claims["ktype"] == "apikey" {
