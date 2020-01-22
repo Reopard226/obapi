@@ -9,18 +9,15 @@ This repo is a monorepo, containing all the microservices used to deploy the Oce
 This repo used a trunk-based development - meaning all commits should be done to master branch.
 It is acceptable to have very short lived feature branches, but ideally everyone should commit their work to master branch at least once per day.
 
-Gitflow:
+Git workflow:
+- Work on **SHORT LIVED** feature branch
 - Work locally
 - Commit regularly locally
 - Test locally
-- If tests pass - push to master
+- If tests pass - Push to origin to run the tests on the feature branch
+- Squash commits (force push to remote branch if you have pushed to origin already)
+- Merge into master (rebase + fast forward merge) - This should be done in Gitlab
 
-Alternative:
-- Create new short lived feature branch
-- Commit regularly locally
-- Test locally
-- If tests pass - push to featurebranch
-- Merge feature branch often into master
 
 ### Microservices in this repo:
 - iamserver: IAM and apikey management (internal only)

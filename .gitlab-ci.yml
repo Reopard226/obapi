@@ -1,3 +1,8 @@
+.except-default:
+  except:
+    variables:
+      - $CI_COMMIT_REF_NAME =~ /^\[DOCS\]-/
+
 variables:
   GITLAB_IMAGE: registry.gitlab.com/oceanbolt/obapi/iamserver
   GCR_IMAGE_STAGING: eu.gcr.io/ob-api-staging/obapi/iamserver
