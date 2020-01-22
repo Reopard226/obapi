@@ -37,7 +37,7 @@ build:
     - docker push $GITLAB_IMAGE
 
 test:
-  image: registry.gitlab.com/oceanboltpub/alpinedockergo
+  image: golang:1.13
   services:
     - docker:19.03.0-dind
   before_script:
