@@ -1,29 +1,31 @@
 package model
 
+import "go.mongodb.org/mongo-driver/bson/primitive"
+
 // VoyageData represents VoyageData model
 type VoyageData struct {
-	Base
-	Imo          int    `json:"imo" bson:"imo"`
-	VesselName   string `json:"vessel_name" bson:"vessel_name"`
-	Segment      string `json:"segment" bson:"segment"`
-	Commodity    string `json:"commodity" bson:"commodity"`
-	Volume       int64  `json:"volume" bson:"volume"`
-	FromPortID   int64  `json:"from_port_id" bson:"from_port_id"`
-	FromPortName string `json:"from_port_name" bson:"from_port_name"`
+	ID                 primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
+	Imo                int                `json:"imo" bson:"imo"`
+	VesselName         string             `json:"vessel_name" bson:"vessel_name"`
+	Segment            string             `json:"segment" bson:"segment"`
+	Commodity          string             `json:"commodity" bson:"commodity"`
+	Volume             int64              `json:"volume" bson:"volume"`
+	FromPortID         int64              `json:"from_port_id" bson:"from_port_id"`
+	FromPortName       string             `json:"from_port_name" bson:"from_port_name"`
+	FromBerthName      string             `json:"from_berth_name" bson:"from_berth_name"`
+	FromCountryCode    string             `json:"from_country_code" bson:"from_country_code"`
+	FromCountry        string             `json:"from_country" bson:"from_country"`
+	FromBerthArrival   string             `json:"from_berth_arrival" bson:"from_berth_arrival"`
+	FromBerthDeparture string             `json:"from_berth_departure" bson:"from_berth_departure"`
+	ToPortID           int64              `json:"to_port_id" bson:"to_port_id"`
+	ToPortName         string             `json:"to_port_name" bson:"to_port_name"`
+	ToBerthName        string             `json:"to_berth_name" bson:"to_berth_name"`
+	ToCountryCode      string             `json:"to_country_code" bson:"to_country_code"`
+	ToCountry          string             `json:"to_country" bson:"to_country"`
+	ToBerthArrival     string             `json:"to_berth_arrival" bson:"to_berth_arrival"`
+	ToBerthDeparture   string             `json:"to_berth_departure" bson:"to_berth_departure"`
 	//From_port_coords_wkt string   `json:"from_port_coords_wkt" bson:"from_port_coords_wkt"`
-	FromBerthName      string `json:"from_berth_name" bson:"from_berth_name"`
-	FromCountryCode    string `json:"from_country_code" bson:"from_country_code"`
-	FromCountry        string `json:"from_country" bson:"from_country"`
-	FromBerthArrival   string `json:"from_berth_arrival" bson:"from_berth_arrival"`
-	FromBerthDeparture string `json:"from_berth_departure" bson:"from_berth_departure"`
-	ToPortID           int64  `json:"to_port_id" bson:"to_port_id"`
-	ToPortName         string `json:"to_port_name" bson:"to_port_name"`
 	//To_port_coords_wkt   string   `json:"to_port_coords_wkt" bson:"to_port_coords_wkt"`
-	ToBerthName      string `json:"to_berth_name" bson:"to_berth_name"`
-	ToCountryCode    string `json:"to_country_code" bson:"to_country_code"`
-	ToCountry        string `json:"to_country" bson:"to_country"`
-	ToBerthArrival   string `json:"to_berth_arrival" bson:"to_berth_arrival"`
-	ToBerthDeparture string `json:"to_berth_departure" bson:"to_berth_departure"`
 }
 
 // VoyageDataObject represents VoyageDataObject model

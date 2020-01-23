@@ -1,22 +1,26 @@
 package model
 
-import "fmt"
+import (
+	"fmt"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 // AnchorageData represents AnchorageData model
 type AnchorageData struct {
-	Base
-	PortID                   string `json:"port_id" bson:"port_id"`
-	DateActual               string `json:"date_actual" bson:"date_actual"`
-	Segment                  string `json:"segment" bson:"segment"`
-	NCongestedVessels        int    `json:"n_congested_vessels" bson:"n_congested_vessels"`
-	AvgWaitingTime           int    `json:"avg_waiting_time" bson:"avg_waiting_time"`
-	FirstQuartileWaitingTime int    `json:"first_quartile_waiting_time" bson:"first_quartile_waiting_time"`
-	MedianWaitingTime        int    `json:"median_waiting_time" bson:"median_waiting_time"`
-	ThirdQuartileWaitingTime int    `json:"third_quartile_waiting_time" bson:"third_quartile_waiting_time"`
-	MaxWaitingTime           int    `json:"max_waiting_time" bson:"max_waiting_time"`
-	DayOfYear                int    `json:"day_of_year" bson:"day_of_year"`
-	Year                     int    `json:"year" bson:"year"`
-	UnifiedDate              string `json:"unified_date" bson:"unified_date"`
+	ID                       primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
+	PortID                   string             `json:"port_id" bson:"port_id"`
+	DateActual               string             `json:"date_actual" bson:"date_actual"`
+	Segment                  string             `json:"segment" bson:"segment"`
+	NCongestedVessels        int                `json:"n_congested_vessels" bson:"n_congested_vessels"`
+	AvgWaitingTime           int                `json:"avg_waiting_time" bson:"avg_waiting_time"`
+	FirstQuartileWaitingTime int                `json:"first_quartile_waiting_time" bson:"first_quartile_waiting_time"`
+	MedianWaitingTime        int                `json:"median_waiting_time" bson:"median_waiting_time"`
+	ThirdQuartileWaitingTime int                `json:"third_quartile_waiting_time" bson:"third_quartile_waiting_time"`
+	MaxWaitingTime           int                `json:"max_waiting_time" bson:"max_waiting_time"`
+	DayOfYear                int                `json:"day_of_year" bson:"day_of_year"`
+	Year                     int                `json:"year" bson:"year"`
+	UnifiedDate              string             `json:"unified_date" bson:"unified_date"`
 }
 
 // AnchorageDataArray represents AnchorageDataArray model

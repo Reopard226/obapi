@@ -2,16 +2,18 @@ package model
 
 import (
 	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // User represents user domain model
 type User struct {
-	Base
-	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
-	Username  string `json:"username"`
-	Password  string `json:"-"`
-	Email     string `json:"email"`
+	ID        primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
+	FirstName string             `json:"first_name"`
+	LastName  string             `json:"last_name"`
+	Username  string             `json:"username"`
+	Password  string             `json:"-"`
+	Email     string             `json:"email"`
 
 	Mobile  string `json:"mobile,omitempty"`
 	Phone   string `json:"phone,omitempty"`

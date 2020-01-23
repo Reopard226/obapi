@@ -1,13 +1,16 @@
 package dao
 
 import (
-	"cloud.google.com/go/firestore"
 	"context"
 	"errors"
+	"log"
+	"time"
+
+	"cloud.google.com/go/firestore"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"log"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"oceanbolt.com/obapi/rpc/iam"
 )
 
@@ -30,6 +33,14 @@ func NewMongoDatabase(connString string, database string) (*mongo.Database, erro
 	if err != nil {
 		return nil, err
 	}
+
+	// check the mongodb connection
+	ctx, _ := context.WithTimeout(context.Background(), 2*time.Second)
+	err = client.Ping(ctx, readpref.Primary())
+	if err != nil {
+		return nil, err
+	}
+
 	// Collection types can be used to access the database
 	dbInit = client.Database(database)
 
