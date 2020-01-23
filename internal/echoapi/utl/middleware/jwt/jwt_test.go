@@ -64,7 +64,7 @@ GQimw1PmipdrKKX374O3bdCzxirdo1+zxfO2luALGUV9RSzYeMYOp0PXeFV7ku+3
 i2p5GbnySFfR2Zz39bFyFpCcwuS8AugRKfzMDbc313zY+isM86mdf9oYnGrMKXcY
 PKUcJdGCHJ4gZDNKBe1KxisK9iLfUA0AQ7bIvuuDxxjxIGhdNIPPqeJyrXhPbuB0
 QAF+SzUDK10tq+v2Zq39wYGI0vB6I9eb3Im+WeP8ztDDTiqirsmzxdvomKzabORZ
-yNA6/ROkItfoSaMv8/QpnpsCAwEAAQ==`, "RS256", 60, iamclient.GetDefaultIamClient())
+yNA6/ROkItfoSaMv8/QpnpsCAwEAAQ==`, "RS256", 60, iamclient.GetDefaultIamClient("https://iamserver-cu5jmh4vyq-ew.a.run.app"))
 	ts := httptest.NewServer(echoHandler(jwtMW.MWFunc()))
 	defer ts.Close()
 	path := ts.URL + "/hello"

@@ -20,7 +20,7 @@ import (
 func (s *Server) CreateKey(ctx context.Context, req *iam.CreateKeyRequest) (key *iam.UserKeyWithSecret, err error) {
 	db := dao.IamDAO{Ctx: ctx, Db: s.Db, Fs: s.Fs}
 
-	parsedKey, err := jwt.ParseRSAPrivateKeyFromPEM([]byte(s.Config.JWKS_RS256_PRIVATE_KEY))
+	privateKey, err := jwt.ParseRSAPrivateKeyFromPEM([]byte(s.Config.JWKS_RS256_PRIVATE_KEY))
 	if err != nil {
 		return key, err
 	}
@@ -32,8 +32,8 @@ func (s *Server) CreateKey(ctx context.Context, req *iam.CreateKeyRequest) (key 
 	log.Println("Checking if keys exists")
 	if ok := db.CheckIfPublicKeyExistsFS(signKeyStringPrint); !ok {
 		log.Println("Key did not exist. inserting...")
-		publicKey, _ := extractPublicKeyFromPrivate(parsedKey)
-		db.InsertPublicKey(&iam.PublicKey{
+		publicKey, _ := extractPublicKeyFromPrivate(privateKey)
+		db.InsertPublicKeyFS(&iam.PublicKey{
 			Kid:       signKeyStringPrint,
 			KeyEnv:    s.Config.OBENV,
 			PublicKey: publicKey,
@@ -52,7 +52,7 @@ func (s *Server) CreateKey(ctx context.Context, req *iam.CreateKeyRequest) (key 
 	})
 	token.Header["kid"] = signKeyStringPrint
 
-	signedToken, err := token.SignedString(parsedKey)
+	signedToken, err := token.SignedString(privateKey)
 	if err != nil {
 		log.Fatal("Token could not be signed")
 	}

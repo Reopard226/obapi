@@ -61,6 +61,7 @@ type Config struct {
 	JWKS_RS256_PRIVATE_KEY    string
 	AUTH0_MGMT_APIKEY_ID      string
 	AUTH0_MGMT_APIKEY_SECRET  string
+	IAM_SERVICE_URL 		  string
 }
 
 func (c *Config) ParseEnv() error {
@@ -68,6 +69,7 @@ func (c *Config) ParseEnv() error {
 	mustMapEnv(&c.JWKS_RS256_PRIVATE_KEY, "JWKS_RS256_PRIVATE_KEY")
 	mustMapEnv(&c.AUTH0_MGMT_APIKEY_ID, "AUTH0_MGMT_APIKEY_ID")
 	mustMapEnv(&c.AUTH0_MGMT_APIKEY_SECRET, "AUTH0_MGMT_APIKEY_SECRET")
+	mustMapEnv(&c.IAM_SERVICE_URL, "IAM_SERVICE_URL")
 
 	return nil
 }

@@ -18,6 +18,7 @@ const IAMServiceURL = "https://iamserver-cu5jmh4vyq-ew.a.run.app"
 
 type AddHeaderTransport struct {
 	T http.RoundTripper
+	ServiceUrl string
 }
 
 type Runtime string
@@ -27,8 +28,8 @@ const (
 	LOCAL            = "Local"
 )
 
-func GetDefaultIamClient() OceanboltIAMClient {
-	client := iam.NewApikeyProtobufClient(IAMServiceURL, &http.Client{Transport: NewAddHeaderTransport(nil)})
+func GetDefaultIamClient(iamUrl string) OceanboltIAMClient {
+	client := iam.NewApikeyProtobufClient(iamUrl, &http.Client{Transport: NewAddHeaderTransport(nil, iamUrl)})
 	return client
 }
 
@@ -42,22 +43,22 @@ func (adt *AddHeaderTransport) RoundTrip(req *http.Request) (*http.Response, err
 		RUNTIME = LOCAL
 	}
 
-	token := GetDefaultToken(RUNTIME)
+	token := GetDefaultToken(RUNTIME,adt.ServiceUrl)
 
 	req.Header.Add("Authorization", "Bearer "+token)
 	return adt.T.RoundTrip(req)
 }
 
-func NewAddHeaderTransport(T http.RoundTripper) *AddHeaderTransport {
+func NewAddHeaderTransport(T http.RoundTripper, iamUrl string) *AddHeaderTransport {
 	if T == nil {
 		T = http.DefaultTransport
 	}
-	return &AddHeaderTransport{T}
+	return &AddHeaderTransport{T,iamUrl}
 }
 
-func GetDefaultTokenDEV() string {
+func GetDefaultTokenDEV(serviceUrl string) string {
 	ctx := context.Background()
-	audience := IAMServiceURL
+	audience := serviceUrl
 	creds, err := transport.Creds(ctx, option.WithScopes(audience))
 	if err != nil {
 		log.Fatal(err)
@@ -69,8 +70,8 @@ func GetDefaultTokenDEV() string {
 	return token.Extra("id_token").(string)
 }
 
-func GetDefaultTokenPROD() string {
-	tokenURL := fmt.Sprintf("/instance/service-accounts/default/identity?audience=%s", IAMServiceURL)
+func GetDefaultTokenPROD(serviceUrl string) string {
+	tokenURL := fmt.Sprintf("/instance/service-accounts/default/identity?audience=%s", serviceUrl)
 	idToken, err := metadata.Get(tokenURL)
 	if err != nil {
 		log.Fatal(err)
@@ -78,10 +79,10 @@ func GetDefaultTokenPROD() string {
 	return idToken
 }
 
-func GetDefaultToken(runtime Runtime) string {
+func GetDefaultToken(runtime Runtime, serviceUrl string) string {
 	if runtime == CLOUDRUN {
-		return GetDefaultTokenPROD()
+		return GetDefaultTokenPROD(serviceUrl)
 	} else {
-		return GetDefaultTokenDEV()
+		return GetDefaultTokenDEV(serviceUrl)
 	}
 }

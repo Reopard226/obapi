@@ -20,10 +20,10 @@ import (
 )
 
 // Start starts the API service
-func Start(db *mongo.Database, cfg *config.Configuration) error {
+func Start(db *mongo.Database, cfg *config.Configuration, envkeyCfg *config.Config) error {
 	sec := secure.New(cfg.App.MinPasswordStr, sha1.New())
 	rbac := rbac.New()
-	iam := iamclient.GetDefaultIamClient()
+	iam := iamclient.GetDefaultIamClient(envkeyCfg.IAM_SERVICE_URL)
 
 	jwtService := jwt.New(cfg.JWT.Secret, cfg.JWT.SigningAlgorithm, cfg.JWT.Duration, iam)
 	log := zlog.New()
