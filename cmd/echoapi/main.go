@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"oceanbolt.com/obapi/internal/echoapi/utl/mongo"
 	"os"
 
 	"oceanbolt.com/obapi/internal/iam/dao"
@@ -34,9 +35,7 @@ func main() {
 	cfgs, err := config.Load(*cfgPath)
 	checkErr(err)
 
-	// db, err := dao.NewMongoDatabase(configStore.MONGODB_CONNECTION_STRING, "apikeys")
-	db, err := dao.NewMongoDatabase(localMongoString, "test")
-
+	db, err := mongo.NewMongoDatabase(configStore.MONGODB_CONNECTION_STRING, "apikeys")
 	if err != nil {
 		panic(err.Error())
 	}

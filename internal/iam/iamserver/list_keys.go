@@ -7,7 +7,7 @@ import (
 )
 
 func (s *Server) ListKeys(ctx context.Context, user *iam.User) (keys *iam.UserKeys, err error) {
-	db := dao.IamDAO{Ctx: ctx, Db: s.Db, Fs: s.Fs}
+	db := dao.IamDAO{Ctx: ctx, Fs: s.Fs}
 
 	return db.ListKeysFS(user)
 }

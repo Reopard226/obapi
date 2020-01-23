@@ -40,11 +40,6 @@ func main() {
 		panic(err)
 	}
 
-	db, err := dao.NewMongoDatabase(cfg.MONGODB_CONNECTION_STRING, cfg.MONGODB_DATABASE_NAME)
-	if err != nil {
-		panic(err)
-	}
-
 	fs, err := dao.NewFireStoreDatabase(context.Background(), cfg.GCP_PROJECT)
 	if err != nil {
 		panic(err)
@@ -52,7 +47,6 @@ func main() {
 	defer fs.Close()
 
 	server := &iamserver.Server{
-		Db:     db,
 		Config: &cfg,
 		Auth0:  auth0,
 		Fs:     fs,

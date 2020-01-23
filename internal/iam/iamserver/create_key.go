@@ -18,7 +18,7 @@ import (
 
 // CreateKey inserts new apikey in backend db
 func (s *Server) CreateKey(ctx context.Context, req *iam.CreateKeyRequest) (key *iam.UserKeyWithSecret, err error) {
-	db := dao.IamDAO{Ctx: ctx, Db: s.Db, Fs: s.Fs}
+	db := dao.IamDAO{Ctx: ctx, Fs: s.Fs}
 
 	privateKey, err := jwt.ParseRSAPrivateKeyFromPEM([]byte(s.Config.JWKS_RS256_PRIVATE_KEY))
 	if err != nil {

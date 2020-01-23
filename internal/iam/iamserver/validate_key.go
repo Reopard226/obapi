@@ -17,7 +17,7 @@ type PermissionCache struct {
 
 // ValidateKey validates that an access token exists in backend db and is valid
 func (s *Server) ValidateKey(ctx context.Context, key *pb.UserKey) (resp *pb.ValidationResponse, err error) {
-	db := dao.IamDAO{Ctx: ctx, Db: s.Db, Fs: s.Fs}
+	db := dao.IamDAO{Ctx: ctx, Fs: s.Fs}
 
 	/*initMap := make(map[string]PermissionCache)
 

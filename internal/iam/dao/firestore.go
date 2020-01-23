@@ -3,17 +3,20 @@ package dao
 import (
 	"context"
 	"errors"
-
 	"log"
 	"oceanbolt.com/obapi/rpc/iam"
 	"strings"
-
 	"cloud.google.com/go/firestore"
 )
 
 const APIKEY_COLLECTION_NAME = "apikeys"
 const USER_COLLECTION_NAME = "users"
 const PUBLIC_KEY_COLLECTION_NAME = "public_keys"
+
+type IamDAO struct {
+	Ctx context.Context
+	Fs  *firestore.Client
+}
 
 // NewFireStoreDatabase initializes a new firestore db client
 func NewFireStoreDatabase(ctx context.Context, projectID string) (*firestore.Client, error) {
