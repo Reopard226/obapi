@@ -33,6 +33,7 @@ func (s *Server) CreateKey(ctx context.Context, req *iam.CreateKeyRequest) (key 
 		"sub":   req.UserId,
 		"iat":   time.Now().Unix(),
 		"exp":   time.Unix(req.Expires, 0),
+		"kid":   signKeyStringPrint,
 	})
 	token.Header["kid"] = signKeyStringPrint
 
