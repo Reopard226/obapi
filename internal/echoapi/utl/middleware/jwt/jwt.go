@@ -13,7 +13,7 @@ import (
 
 	"github.com/labstack/echo"
 
-	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/dgrijalva/jwt-go"
 )
 
 // New generates new JWT service necessery for auth middleware
@@ -110,9 +110,13 @@ func (j *Service) ParseToken(c echo.Context) (*jwt.Token, error) {
 		if j.algo != token.Method {
 			return nil, model.ErrGeneric
 		}
-		parsedKey, err := jwt.ParseRSAPublicKeyFromPEM([]byte("-----BEGIN CERTIFICATE-----\n" + j.key + "\n-----END CERTIFICATE-----"))
+		pub, err := j.iamClient.GetPublicKey(context.Background(), &iam.PrivateKey{Kid: token.Header["kid"].(string)})
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
+		}
+		parsedKey, err := jwt.ParseRSAPublicKeyFromPEM(pub.PublicKey)
+		if err != nil {
+			log.Println(err)
 		}
 		return parsedKey, nil
 	}

@@ -7,3 +7,4 @@ iam-invoker-ob-staging.json
 profile.out
 coverage.txt
 alpine-docker
+*refresh_rpc.sh

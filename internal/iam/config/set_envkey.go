@@ -21,6 +21,7 @@ type Config struct {
 	AUTH0_MGMT_CLIENT_SECRET  string
 	AUTH0_DOMAIN              string
 	GCP_PROJECT               string
+	OBENV                     string
 }
 
 func (c *Config) ParseEnv() error {
@@ -32,6 +33,7 @@ func (c *Config) ParseEnv() error {
 	mustMapEnv(&c.AUTH0_MGMT_CLIENT_SECRET, "AUTH0_MGMT_CLIENT_SECRET")
 	mustMapEnv(&c.AUTH0_DOMAIN, "AUTH0_DOMAIN")
 	mustMapEnv(&c.GCP_PROJECT, "GCP_PROJECT")
+	mustMapEnv(&c.OBENV, "OBENV")
 
 	return nil
 }

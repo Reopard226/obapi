@@ -45,18 +45,14 @@ test:
   image: golang:1.13
   before_script:
     - export ENVKEY=$ENVKEY_TEST
-  after_script:
-    - bash <(curl -s https://codecov.io/bash)
-  variables:
-    DOCKER_TLS_DIR: "/certs"
-    DOCKER_DRIVER: overlay2
   stage: build and test
   only:
     - master
     - merge_requests
   script:
     - ./test.sh
-
+  after_script:
+    - bash <(curl -s https://codecov.io/bash)
 
 push images to gcr staging:
   before_script:

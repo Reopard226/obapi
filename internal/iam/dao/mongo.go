@@ -12,7 +12,6 @@ import (
 )
 
 // APIKEY_COLLECTION_NAME Collection name
-const APIKEY_COLLECTION_NAME = "apikeys"
 
 type IamDAO struct {
 	Ctx context.Context

@@ -6,6 +6,8 @@
 
 This repo is a monorepo, containing all the microservices used to deploy the Oceanbolt Data API.
 
+![Architecture](docs/obdataapi.png)
+
 ### Commit Instructions
 
 This repo used a trunk-based development - meaning all commits should be done to master branch.
@@ -19,6 +21,7 @@ Git workflow:
 - If tests pass - Push to origin to run the tests on the feature branch
 - Squash commits (force push to remote branch if you have pushed to origin already)
 - Merge into master (rebase + fast forward merge) - This should be done in Gitlab
+- The Merge into master should ideally be done at least once a day
 
 
 ### Microservices in this repo:

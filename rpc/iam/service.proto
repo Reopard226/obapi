@@ -14,11 +14,24 @@ service Apikey {
     rpc DeleteKey(DeleteKeyRequest) returns (KeyDeletedResponse);
 
     rpc ValidateKey(UserKey) returns (ValidationResponse);
+
+    rpc GetPublicKey(PrivateKey) returns (PublicKey);
 }
 
 // User object used to retrieve keys
 message User {
     string user_id = 1 [(tagger.tags) = "bson:\"user_id,omitempty\" firestore:\"user_id,omitempty\""]; // The Auth0 userid for the user
+}
+
+message PrivateKey {
+    string kid = 1 [(tagger.tags) = "bson:\"kid,omitempty\" firestore:\"kid,omitempty\""]; // The kid
+}
+
+message PublicKey {
+    string kid = 1 [(tagger.tags) = "bson:\"kid,omitempty\" firestore:\"kid,omitempty\""]; // The Auth0 userid for the user
+    string key_env = 2 [(tagger.tags) = "bson:\"key_env,omitempty\" firestore:\"key_env,omitempty\""]; // The Auth0 userid for the user
+    bytes public_key = 3 [(tagger.tags) = "bson:\"public_key,omitempty\" firestore:\"public_key,omitempty\""]; // The Auth0 userid for the user
+
 }
 
 message UserKey {

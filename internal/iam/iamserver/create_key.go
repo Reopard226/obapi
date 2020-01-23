@@ -3,6 +3,9 @@ package iamserver
 import (
 	"context"
 	"crypto/md5"
+	"crypto/rsa"
+	"crypto/x509"
+	"encoding/pem"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"log"
@@ -13,6 +16,7 @@ import (
 	"time"
 )
 
+// CreateKey inserts new apikey in backend db
 func (s *Server) CreateKey(ctx context.Context, req *iam.CreateKeyRequest) (key *iam.UserKeyWithSecret, err error) {
 	db := dao.IamDAO{Ctx: ctx, Db: s.Db, Fs: s.Fs}
 
@@ -24,6 +28,17 @@ func (s *Server) CreateKey(ctx context.Context, req *iam.CreateKeyRequest) (key 
 	obkid := getKeyId(16)
 	signKeyBytePrint := md5.Sum([]byte(s.Config.JWKS_RS256_PRIVATE_KEY))
 	signKeyStringPrint := fmt.Sprintf("%x", signKeyBytePrint)
+
+	log.Println("Checking if keys exists")
+	if ok := db.CheckIfPublicKeyExistsFS(signKeyStringPrint); !ok {
+		log.Println("Key did not exist. inserting...")
+		publicKey, _ := extractPublicKeyFromPrivate(parsedKey)
+		db.InsertPublicKey(&iam.PublicKey{
+			Kid:       signKeyStringPrint,
+			KeyEnv:    s.Config.OBENV,
+			PublicKey: publicKey,
+		})
+	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodRS256, jwt.MapClaims{
 		"aud":   "https://api.oceanbolt.com",
@@ -62,6 +77,7 @@ func (s *Server) CreateKey(ctx context.Context, req *iam.CreateKeyRequest) (key 
 	}, nil
 }
 
+// getKeyId generates random key id string
 func getKeyId(length int) string {
 	rand.Seed(time.Now().UnixNano())
 	chars := []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
@@ -73,4 +89,16 @@ func getKeyId(length int) string {
 		b.WriteRune(chars[rand.Intn(len(chars))])
 	}
 	return b.String()
+}
+
+// extractPublicKeyFromPrivate extracts the public key from an rsa private key
+func extractPublicKeyFromPrivate(pk *rsa.PrivateKey) ([]byte, error) {
+
+	publicKeyDer, _ := x509.MarshalPKIXPublicKey(pk.Public())
+	publicKeyBlock := pem.Block{
+		Type:  "PUBLIC KEY",
+		Bytes: publicKeyDer,
+	}
+	return pem.EncodeToMemory(&publicKeyBlock), nil
+
 }
