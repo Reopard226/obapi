@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"oceanbolt.com/obapi/internal/echoapi/utl/model"
 )
@@ -21,11 +22,15 @@ func NewPort() *Port {
 
 // View returns single port
 func (u *Port) View(db *mongo.Database, portID, segment string) (*model.Port, error) {
-	var port = new(model.Port)
+	port := new(model.Port)
 	collection := db.Collection(COLLNAME)
 	ctx := context.Background()
 
-	err := collection.FindOne(ctx, bson.M{"_id": portID}).Decode(&port)
+	objID, err := primitive.ObjectIDFromHex(portID)
+	if err != nil {
+		return nil, err
+	}
+	err = collection.FindOne(ctx, bson.M{"_id": objID}).Decode(&port)
 	return port, err
 }
 

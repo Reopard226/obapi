@@ -1,21 +1,23 @@
 package model
 
+import "go.mongodb.org/mongo-driver/bson/primitive"
+
 // DryDockCount represents DryDockCount model
 type DryDockCount struct {
-	Base
-	DateCol     string `json:"date_col" bson:"date_col"`
-	VesselCount int    `json:"vessel_count" bson:"vessel_count"`
+	ID          primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
+	DateCol     string             `json:"date_col" bson:"date_col"`
+	VesselCount int                `json:"vessel_count" bson:"vessel_count"`
 }
 
 // DryDockFullrow represents DryDockFullrow model
 type DryDockFullrow struct {
-	Base
-	DateCol          string  `json:"date_col" bson:"date_col"`
-	Segment          string  `json:"segment" bson:"segment"`
-	VesselCount      int     `json:"vessel_count" bson:"vessel_count"`
-	VesselCountFleet float64 `json:"vessel_count_fleet" bson:"vessel_count_fleet"`
-	Dwt              int     `json:"dwt" bson:"dwt"`
-	DwtFleet         float64 `json:"dwt_fleet" bson:"dwt_fleet"`
+	ID               primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
+	DateCol          string             `json:"date_col" bson:"date_col"`
+	Segment          string             `json:"segment" bson:"segment"`
+	VesselCount      int                `json:"vessel_count" bson:"vessel_count"`
+	VesselCountFleet float64            `json:"vessel_count_fleet" bson:"vessel_count_fleet"`
+	Dwt              int                `json:"dwt" bson:"dwt"`
+	DwtFleet         float64            `json:"dwt_fleet" bson:"dwt_fleet"`
 }
 
 // TimeseriesArray represents TimeseriesArray model
@@ -34,11 +36,11 @@ type TimeseriesObject struct {
 
 // DryDockSummaryStatsFullRow represents DryDockSummaryStatsFullRow model
 type DryDockSummaryStatsFullRow struct {
-	Base
-	Month              string `json:"month" bson:"month"`
-	Segment            string `json:"segment" bson:"segment"`
-	AverageDaysInDock  int    `json:"average_days_in_dock" bson:"average_days_in_dock"`
-	CompletedDockStays int    `json:"completed_dock_stays" bson:"completed_dock_stays"`
+	ID                 primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
+	Month              string             `json:"month" bson:"month"`
+	Segment            string             `json:"segment" bson:"segment"`
+	AverageDaysInDock  int                `json:"average_days_in_dock" bson:"average_days_in_dock"`
+	CompletedDockStays int                `json:"completed_dock_stays" bson:"completed_dock_stays"`
 }
 
 // DryDockSummaryStatsObject represents DryDockSummaryStatsObject model

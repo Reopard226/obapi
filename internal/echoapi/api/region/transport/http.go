@@ -3,18 +3,18 @@ package transport
 import (
 	"net/http"
 
-	"oceanbolt.com/obapi/internal/echoapi/api/port"
+	"oceanbolt.com/obapi/internal/echoapi/api/region"
 
 	"github.com/labstack/echo"
 )
 
 // HTTP represents user http service
 type HTTP struct {
-	svc port.Service
+	svc region.Service
 }
 
 // NewHTTP creates new user http service
-func NewHTTP(svc port.Service, er *echo.Group) {
+func NewHTTP(svc region.Service, er *echo.Group) {
 	h := HTTP{svc}
 	ur := er.Group("/congestion")
 
@@ -44,7 +44,7 @@ func NewHTTP(svc port.Service, er *echo.Group) {
 	//     "$ref": "#/responses/err"
 	//   "500":
 	//     "$ref": "#/responses/err"
-	ur.GET("/port/list", h.list)
+	ur.GET("/region/list", h.list)
 
 	// swagger:operation GET /v1/users/{id} users getUser
 	// ---
@@ -69,16 +69,16 @@ func NewHTTP(svc port.Service, er *echo.Group) {
 	//     "$ref": "#/responses/err"
 	//   "500":
 	//     "$ref": "#/responses/err"
-	ur.GET("/port", h.view)
+	ur.GET("/region", h.view)
 }
 
 func (h *HTTP) view(c echo.Context) error {
 	var Params struct {
-		Port_ID string `form:"port_id"`
-		Segment string
+		Region_ID string `form:"region_id"`
+		Segment   string
 	}
 	c.Bind(&Params)
-	result, err := h.svc.View(c, Params.Port_ID, Params.Segment)
+	result, err := h.svc.View(c, Params.Region_ID, Params.Segment)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
@@ -87,11 +87,11 @@ func (h *HTTP) view(c echo.Context) error {
 
 func (h *HTTP) list(c echo.Context) error {
 	var Params struct {
-		Port_ID string `json:"port_id"`
-		Segment string `json:"segment"`
+		Region_ID string `json:"region_id"`
+		Segment   string `json:"segment"`
 	}
 	c.Bind(&Params)
-	result, err := h.svc.List(c, Params.Port_ID, Params.Segment)
+	result, err := h.svc.List(c, Params.Region_ID, Params.Segment)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
