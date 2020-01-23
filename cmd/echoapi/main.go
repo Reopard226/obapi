@@ -4,11 +4,7 @@ import (
 	"flag"
 	"oceanbolt.com/obapi/internal/echoapi/utl/mongo"
 	"os"
-
-	"oceanbolt.com/obapi/internal/iam/dao"
-
 	"oceanbolt.com/obapi/internal/echoapi/api"
-
 	"oceanbolt.com/obapi/internal/echoapi/utl/config"
 )
 

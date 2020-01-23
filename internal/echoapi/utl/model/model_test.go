@@ -3,10 +3,10 @@ package model_test
 import (
 	"testing"
 
-	"oceanbolt.com/obapi/internal/echoapi/utl/mock"
 	model "oceanbolt.com/obapi/internal/echoapi/utl/model"
 )
 
+/*
 func TestBeforeInsert(t *testing.T) {
 	base := &model.Base{
 		ID: 1,
@@ -30,7 +30,7 @@ func TestBeforeUpdate(t *testing.T) {
 		t.Error("UpdatedAt was not changed")
 	}
 
-}
+}*/
 
 func TestPaginationTransform(t *testing.T) {
 	p := &model.PaginationReq{
