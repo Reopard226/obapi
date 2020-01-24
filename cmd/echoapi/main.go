@@ -31,8 +31,8 @@ func main() {
 	cfgs, err := config.Load(*cfgPath)
 	checkErr(err)
 
-	db, err := mongo.NewMongoDatabase(configStore.MONGODB_CONNECTION_STRING, "apikeys")
-	// db, err := mongo.NewMongoDatabase(localMongoString, "test")
+	// db, err := mongo.NewMongoDatabase(configStore.MONGODB_CONNECTION_STRING, "apikeys")
+	db, err := mongo.NewMongoDatabase(localMongoString, "test")
 	if err != nil {
 		panic(err.Error())
 	}

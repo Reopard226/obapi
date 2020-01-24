@@ -8,13 +8,13 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"oceanbolt.com/obapi/internal/echoapi/utl/zlog"
 
-	"oceanbolt.com/obapi/internal/echoapi/api/port"
-	pl "oceanbolt.com/obapi/internal/echoapi/api/port/logging"
-	pt "oceanbolt.com/obapi/internal/echoapi/api/port/transport"
+	"oceanbolt.com/obapi/internal/echoapi/api/tonnage"
+	tl "oceanbolt.com/obapi/internal/echoapi/api/tonnage/logging"
+	tt "oceanbolt.com/obapi/internal/echoapi/api/tonnage/transport"
 
 	"oceanbolt.com/obapi/internal/echoapi/api/congestion"
-	tl "oceanbolt.com/obapi/internal/echoapi/api/congestion/logging"
-	tt "oceanbolt.com/obapi/internal/echoapi/api/congestion/transport"
+	cl "oceanbolt.com/obapi/internal/echoapi/api/congestion/logging"
+	ct "oceanbolt.com/obapi/internal/echoapi/api/congestion/transport"
 
 	"oceanbolt.com/obapi/internal/echoapi/utl/config"
 	"oceanbolt.com/obapi/internal/echoapi/utl/middleware/jwt"
@@ -41,8 +41,8 @@ func Start(db *mongo.Database, cfg *config.Configuration, envkeyCfg *config.Conf
 		v1.Use(jwtService.MWFunc())
 	}
 
-	pt.NewHTTP(pl.New(port.Initialize(db, rbac, sec), log), v1)
-	tt.NewHTTP(tl.New(congestion.Initialize(db, rbac, sec), log), v1)
+	tt.NewHTTP(tl.New(tonnage.Initialize(db, rbac, sec), log), v1)
+	ct.NewHTTP(cl.New(congestion.Initialize(db, rbac, sec), log), v1)
 
 	fmt.Printf("Starting server")
 	server.Start(e, &server.Config{

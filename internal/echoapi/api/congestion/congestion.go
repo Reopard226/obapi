@@ -6,12 +6,12 @@ import (
 )
 
 // CongestionPort returns AnchoragePortArray
-func (u *Congestion) CongestionPort(c echo.Context, pid string, seg string) (*model.AnchoragePortArray, error) {
+func (u *Congestion) CongestionPort(c echo.Context, pid, seg string) (*model.AnchoragePortArray, error) {
 	return u.udb.CongestionPort(u.db, pid, seg)
 }
 
 // CongestionRegion returns AnchorageRegionArray
-func (u *Congestion) CongestionRegion(c echo.Context, rid string, seg string) (*model.AnchorageRegionArray, error) {
+func (u *Congestion) CongestionRegion(c echo.Context, rid, seg string) (*model.AnchorageRegionArray, error) {
 	return u.udb.CongestionRegion(u.db, rid, seg)
 }
 

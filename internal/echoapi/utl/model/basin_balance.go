@@ -1,6 +1,10 @@
 package model
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 // BasinBalanceFullRow represents BasinBalanceFullRow model
 type BasinBalanceFullRow struct {
@@ -24,4 +28,29 @@ type TimeCountObject struct {
 	VesselCount []int    `json:"vessel_count"`
 	Year        []int    `json:"year"`
 	UnifiedDate []string `json:"unified_date"`
+}
+
+// ConvertBasinTimeCount converts basinbalance array to timecount object
+func ConvertBasinTimeCount(rows []BasinBalanceFullRow) *TimeCountObject {
+	result := &TimeCountObject{
+		Date:        []string{},
+		VesselCount: []int{},
+		Year:        []int{},
+		UnifiedDate: []string{},
+	}
+	dc := ""
+	thisYear := time.Now().Year()
+	for _, v := range rows {
+		if dc == v.DateCol {
+			result.VesselCount[len(result.VesselCount)-1] += v.VesselCount
+		} else {
+			t, _ := time.Parse("2006-01-02", v.DateCol)
+			result.Date = append(result.Date, v.DateCol)
+			result.VesselCount = append(result.VesselCount, v.VesselCount)
+			result.Year = append(result.Year, t.Year())
+			result.UnifiedDate = append(result.UnifiedDate, t.AddDate(thisYear-t.Year(), 0, 0).Format("2006-01-02"))
+			dc = v.DateCol
+		}
+	}
+	return result
 }

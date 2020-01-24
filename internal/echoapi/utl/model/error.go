@@ -15,4 +15,13 @@ var (
 
 	// ErrUnauthorized (401) is returned when user is not authorized
 	ErrUnauthorized = echo.ErrUnauthorized
+
+	// ErrInvalidSegment is invalid segment error within request
+	ErrInvalidSegment = "Error in query parameter: invalid value for parameter 'segment'"
+
+	// ErrInvalidMetric is invalid metric error within request
+	ErrInvalidMetric = "Error in query parameter: invalid value for parameter 'metric'"
+
+	// ErrMissingRegionID is region_id missing error within request
+	ErrMissingRegionID = "Error parameter 'region_id' is missing with no default"
 )
