@@ -6,8 +6,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-// AnchorageData represents AnchorageData model
-type AnchorageData struct {
+// AnchoragePort represents AnchoragePort model
+type AnchoragePort struct {
 	ID                       primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
 	PortID                   string             `json:"port_id" bson:"port_id"`
 	DateActual               string             `json:"date_actual" bson:"date_actual"`
@@ -23,8 +23,8 @@ type AnchorageData struct {
 	UnifiedDate              string             `json:"unified_date" bson:"unified_date"`
 }
 
-// AnchorageDataArray represents AnchorageDataArray model
-type AnchorageDataArray struct {
+// AnchoragePortArray represents AnchorageDataArray model
+type AnchoragePortArray struct {
 	PortID                   string   `json:"port_id" bson:"port_id"`
 	DateActual               []string `json:"date_actual" bson:"date_actual"`
 	Segment                  string   `json:"segment" bson:"segment"`
@@ -39,12 +39,15 @@ type AnchorageDataArray struct {
 	UnifiedDate              []string `json:"unified_date" bson:"unified_date"`
 }
 
-func (a AnchorageData) String() string {
-	return fmt.Sprintf("AnchorageData<%s \t| %s \t| %d\t>\n", a.DateActual, a.Segment, a.NCongestedVessels)
+func (a AnchoragePort) String() string {
+	return fmt.Sprintf("AnchoragePort<%s \t| %s \t| %d\t>\n", a.DateActual, a.Segment, a.NCongestedVessels)
 }
 
 // ConvertAnchorageOutput converts anchorage output
-func ConvertAnchorageOutput(a []AnchorageData) AnchorageDataArray {
+func ConvertAnchorageOutput(a []AnchoragePort) *AnchoragePortArray {
+	if len(a) == 0 {
+		return nil
+	}
 	var portID = a[0].PortID
 	var dateActual = make([]string, len(a))
 	var segment = a[0].Segment
@@ -71,7 +74,7 @@ func ConvertAnchorageOutput(a []AnchorageData) AnchorageDataArray {
 		unifiedDate[k] = v.UnifiedDate
 	}
 
-	return AnchorageDataArray{
+	arrAncPort := AnchoragePortArray{
 		PortID:                   portID,
 		DateActual:               dateActual,
 		Segment:                  segment,
@@ -85,4 +88,5 @@ func ConvertAnchorageOutput(a []AnchorageData) AnchorageDataArray {
 		Year:                     year,
 		UnifiedDate:              unifiedDate,
 	}
+	return &arrAncPort
 }

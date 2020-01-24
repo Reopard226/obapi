@@ -6,8 +6,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-// AnchorageDataRegion represents AnchorageDataRegion model
-type AnchorageDataRegion struct {
+// AnchorageRegion represents AnchorageRegion model
+type AnchorageRegion struct {
 	ID                       primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
 	RegionID                 string             `json:"region_id" bson:"region_id"`
 	DateActual               string             `json:"date_actual" bson:"date_actual"`
@@ -23,8 +23,8 @@ type AnchorageDataRegion struct {
 	UnifiedDate              string             `json:"unified_date" bson:"unified_date"`
 }
 
-// AnchorageDataRegionArray represents AnchorageDataRegionArray model
-type AnchorageDataRegionArray struct {
+// AnchorageRegionArray represents AnchorageRegionArray model
+type AnchorageRegionArray struct {
 	RegionID                 string   `json:"region_id" bson:"region_id"`
 	DateActual               []string `json:"date_actual" bson:"date_actual"`
 	Segment                  string   `json:"segment" bson:"segment"`
@@ -39,12 +39,15 @@ type AnchorageDataRegionArray struct {
 	UnifiedDate              []string `json:"unified_date" bson:"unified_date"`
 }
 
-func (a AnchorageDataRegion) String() string {
+func (a AnchorageRegion) String() string {
 	return fmt.Sprintf("AnchorageDataRegion<%s \t| %s \t| %d\t>\n", a.DateActual, a.Segment, a.NCongestedVessels)
 }
 
 // ConvertAnchorageRegionOutput converts AnchorageRegion output
-func ConvertAnchorageRegionOutput(a []AnchorageDataRegion) AnchorageDataRegionArray {
+func ConvertAnchorageRegionOutput(a []AnchorageRegion) *AnchorageRegionArray {
+	if len(a) == 0 {
+		return nil
+	}
 	var regionID = a[0].RegionID
 	var dateActual = make([]string, len(a))
 	var segment = a[0].Segment
@@ -71,7 +74,7 @@ func ConvertAnchorageRegionOutput(a []AnchorageDataRegion) AnchorageDataRegionAr
 		unifiedDate[k] = v.UnifiedDate
 	}
 
-	return AnchorageDataRegionArray{
+	arrAncRegion := AnchorageRegionArray{
 		RegionID:                 regionID,
 		DateActual:               dateActual,
 		Segment:                  segment,
@@ -85,4 +88,5 @@ func ConvertAnchorageRegionOutput(a []AnchorageDataRegion) AnchorageDataRegionAr
 		Year:                     year,
 		UnifiedDate:              unifiedDate,
 	}
+	return &arrAncRegion
 }

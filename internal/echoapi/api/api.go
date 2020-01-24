@@ -12,9 +12,9 @@ import (
 	pl "oceanbolt.com/obapi/internal/echoapi/api/port/logging"
 	pt "oceanbolt.com/obapi/internal/echoapi/api/port/transport"
 
-	"oceanbolt.com/obapi/internal/echoapi/api/region"
-	rl "oceanbolt.com/obapi/internal/echoapi/api/region/logging"
-	rt "oceanbolt.com/obapi/internal/echoapi/api/region/transport"
+	"oceanbolt.com/obapi/internal/echoapi/api/congestion"
+	tl "oceanbolt.com/obapi/internal/echoapi/api/congestion/logging"
+	tt "oceanbolt.com/obapi/internal/echoapi/api/congestion/transport"
 
 	"oceanbolt.com/obapi/internal/echoapi/utl/config"
 	"oceanbolt.com/obapi/internal/echoapi/utl/middleware/jwt"
@@ -42,7 +42,7 @@ func Start(db *mongo.Database, cfg *config.Configuration, envkeyCfg *config.Conf
 	}
 
 	pt.NewHTTP(pl.New(port.Initialize(db, rbac, sec), log), v1)
-	rt.NewHTTP(rl.New(region.Initialize(db, rbac, sec), log), v1)
+	tt.NewHTTP(tl.New(congestion.Initialize(db, rbac, sec), log), v1)
 
 	fmt.Printf("Starting server")
 	server.Start(e, &server.Config{

@@ -2,10 +2,10 @@ package main
 
 import (
 	"flag"
-	"oceanbolt.com/obapi/internal/echoapi/utl/mongo"
-	"os"
 	"oceanbolt.com/obapi/internal/echoapi/api"
 	"oceanbolt.com/obapi/internal/echoapi/utl/config"
+	"oceanbolt.com/obapi/internal/echoapi/utl/mongo"
+	"os"
 )
 
 var configStore config.Config
@@ -32,11 +32,12 @@ func main() {
 	checkErr(err)
 
 	db, err := mongo.NewMongoDatabase(configStore.MONGODB_CONNECTION_STRING, "apikeys")
+	// db, err := mongo.NewMongoDatabase(localMongoString, "test")
 	if err != nil {
 		panic(err.Error())
 	}
 
-	checkErr(api.Start(db, cfgs,&configStore))
+	checkErr(api.Start(db, cfgs, &configStore))
 
 }
 

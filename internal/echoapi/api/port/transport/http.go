@@ -16,7 +16,7 @@ type HTTP struct {
 // NewHTTP creates new user http service
 func NewHTTP(svc port.Service, er *echo.Group) {
 	h := HTTP{svc}
-	ur := er.Group("/congestion")
+	ur := er.Group("/test")
 
 	// swagger:operation GET /v1/users users listUsers
 	// ---
