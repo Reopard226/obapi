@@ -1,0 +1,17 @@
+{
+  "name": "echoapi-docs",
+  "version": "1.0.0",
+  "description": "Documentation for Oceanbolt Data Api in openapi format",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "redoc-cli serve",
+    "redoc-bundle": "redoc-cli bundle ./spec/openapi.yaml --output ./docs/index.html",
+    "redoc-serve": "redoc-cli serve ./spec/openapi.yaml --watch"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "dredd": "^12.2.0",
+    "redoc-cli": "^0.9.4"
+  }
+}
