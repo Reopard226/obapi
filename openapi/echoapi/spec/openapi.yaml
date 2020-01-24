@@ -1,0 +1,1133 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Oceanbolt Data API
+  description: |
+    This API provides access to the data available in the Oceanbolt Data Platform. The API is accessible on the following base url: https://api.oceanbolt.com/v1.
+
+
+    # Introduction
+    This API is documented in OpenAPI format.
+
+    The api allows for programmatic access to the different data resources that are also accessible in the Oceanbolt Data Platform.
+    The resources are grouped into the following categories:
+
+    - apikey: management of apikeys
+    - congestion: congestion data
+    - tonnage: tonnage balance data
+    - tradeflows: tradeflow data
+
+    Detailed information on how to query for the data is available in the documentation on the individual endpoints.
+    # Cross-Origin Resource Sharing
+    This API features Cross-Origin Resource Sharing (CORS) implemented in compliance with  [W3C spec](https://www.w3.org/TR/cors/).
+    And that allows cross-domain communication from the browser.
+    All responses have a wildcard same-origin which makes them completely public and accessible to everyone, including any code on any site.
+    # Authentication
+    Authentication to the Oceanbolt Data Api is done through bearer token.
+    You can create access tokens from your profile page on: [Oceanbolt Data Platform](https://app.oceanbolt.com).
+    Access tokens should be provided as a bearer token, e.g. it should be in the form of a header with the following format:
+
+        Authorization: Bearer <ACCESS_TOKEN>
+
+
+    # Base url
+    Base url: https://api.oceanbolt.com/v1
+
+  contact:
+    name: API Support
+    email: support@oceanbolt.com
+    url: 'https://openapi.oceanbolt.com'
+  x-logo:
+    url: 'https://storage.cloud.google.com/ob-public-assets/web/oceanbolt_logo.png'
+    altText: Oceanbolt
+servers:
+  # Added by API Auto Mocking Plugin
+  - url: https://api.oceanbolt.com/v1
+    description: Default server
+tags:
+  - name: apikey
+    description: Management of apikeys
+    x-displayName: Apikeys
+  - name: congestion
+    description: Congestion data
+    x-displayName: Congestion
+  - name: tonnage
+    description: Tonnage balance data
+    x-displayName: Tonnage data
+  - name: tradeflows
+    description: Trade flow data
+    x-displayName: Trade flow data
+  - name: tonnage_count_model
+    x-displayName: The Tonnage Data Model
+    description: |
+      <SchemaDefinition schemaRef="#/components/schemas/TonnageData" exampleRef="#/components/examples/TonnageData"/>
+  - name: tradeflow_model
+    x-displayName: The Trade Flow Model
+    description: |
+      <SchemaDefinition schemaRef="#/components/schemas/Voyage" exampleRef="#/components/examples/Voyage" showReadOnly={true} showWriteOnly={true} />
+  - name: timeseries_model
+    x-displayName: The Timeseries Model
+    description: |
+      <SchemaDefinition schemaRef="#/components/schemas/TimeseriesSeasonalData" exampleRef="#/components/examples/TimeseriesSeasonalData" showReadOnly={true} showWriteOnly={true} />
+
+
+x-tagGroups:
+  - name: Data
+    tags:
+      - congestion
+      - tonnage
+      - tradeflows
+  - name: Access Management
+    tags:
+      - apikey
+  - name: Models
+    tags:
+      - tonnage_count_model
+      - tradeflow_model
+      - timeseries_model
+paths:
+  /apiaccess/keys:
+    get:
+      summary: List all keys
+      operationId: listApikeys
+      tags:
+        - apikey
+      responses:
+        '200':
+          description: An array of existing apikeys
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Apikeys"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      summary: Create an apikey
+      operationId: createApikey
+      tags:
+        - apikey
+      responses:
+        '201':
+          description: Apikey created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApikeyCreatedResponse"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      requestBody:
+        $ref: '#/components/requestBodies/CreateApikeyRequest'
+  /apiaccess/keys/{apikey_id}:
+    delete:
+      summary: Deletes an existing apikey
+      operationId: deleteApikeyById
+      tags:
+        - apikey
+      parameters:
+        - name: apikey_id
+          in: path
+          required: true
+          description: The id of the apikey to delete
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Key deleted
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /tonnage/basin:
+    get:
+      summary: Tonnage balance (basins)
+      operationId: getTonnageBasin
+      tags:
+        - tonnage
+      parameters:
+        - name: basin
+          in: query
+          required: true
+          description: The name of the basin
+          schema:
+            type: string
+            enum: [atlantic, indian_ocean, pacific_east, pacific_west]
+        - name: segment
+          in: query
+          required: true
+          description: The vessel segment for which to get tonnage balance data
+          schema:
+            type: string
+            enum: [capesize, panamax, supramax, handysize]
+      responses:
+        '200':
+          description: Timeseries data for tonnage balance
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TonnageData"
+              example:
+                $ref: "#/components/examples/TonnageData"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /tonnage/drydock:
+    get:
+      summary: "Vessels in dry dock"
+      operationId: getTonnageDrydock
+      tags:
+        - tonnage
+      parameters:
+        - name: segment
+          in: query
+          required: true
+          description: The vessel segment for which to get dry dock data
+          schema:
+            type: string
+            enum: [capesize, panamax, supramax, handysize]
+        - name: metric
+          in: query
+          required: true
+          description: The metric to for which to get drydock timeseries data
+          schema:
+            type: string
+            enum: [vessel_count, dwt]     
+        - name: absolute
+          in: query
+          required: true
+          description: Specifies whether to return absolute values or relative values (absolute values in % of fleet)
+          schema:
+            type: boolean
+            enum: [true, false] 
+      responses:
+        '200':
+          description: "Timeseries data for # of vessels in dry dock"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TimeseriesSeasonalData"
+              example:
+                $ref: "#/components/examples/TimeseriesSeasonalData"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /tonnage/drydock/summary:
+    get:
+      summary: "Summary stats dry dock visits"
+      operationId: getTonnageDrydockSummary
+      tags:
+        - tonnage
+      parameters:
+        - name: segment
+          in: query
+          required: true
+          description: The vessel segment for which to get dry dock data
+          schema:
+            type: string
+            enum: [capesize, panamax, supramax, handysize]
+      responses:
+        '200':
+          description: "Timeseries data for # of vessels in dry dock"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DryDockSummaryData"
+              example:
+                $ref: "#/components/examples/DryDockSummaryData"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /congestion/port:
+    get:
+      summary: Get port congestion
+      operationId: getCongestionPort
+      tags:
+        - congestion
+      parameters:
+        - name: port_id
+          in: query
+          required: true
+          description: "The port id of the relevant port (port_id's can be obtained from /congestion/port/list endpoint"
+          schema:
+            type: number
+            format: int32
+        - name: segment
+          in: query
+          required: true
+          description: "The vessel segment for which to get tonnage balance data"
+          schema:
+            type: string
+            enum: [capesize, panamax, supramax, handysize]
+      responses:
+        '200':
+          description: Timeseries data for port congestion
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CongestionDataPort"
+              example:
+                # Properties of the referenced object
+                port_id: 2143
+                date_actual: ["2017-01-01","2017-01-02","2017-01-02","2017-01-02","2017-01-02"]
+                segment: capesize
+                n_congested_vessels: [48,53,66,65,43]
+                avg_waiting_time: [48,53,66,65,43]
+                first_quartile_waiting_time: [48,53,66,65,43]
+                median_waiting_time: [48,53,66,65,43]
+                third_quartile_waiting_time: [48,53,66,65,43]
+                max_waiting_time: [48,53,66,65,43]
+                day_of_year: [1,2,3,4,5]
+                year: [2017,2017,2017,2017,2017]
+                unified_date: ["2017-01-01","2017-01-02","2017-01-02","2017-01-02","2017-01-02"]
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /congestion/port/list:
+    get:
+      summary: List of ports and port_ids
+      operationId: listCongestionPorts
+      tags:
+        - congestion
+      responses:
+        '200':
+          description: List available ports
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ports"
+              example:
+                # Properties of the referenced object
+                - port_id: 2143
+                  port_name: Singapore
+                  country_code: SG
+                  unlocode: "SGSIN"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /congestion/region:
+    get:
+      summary: Get regional congestion
+      operationId: getCongestionRegion
+      tags:
+        - congestion
+      parameters:
+        - name: region_id
+          in: query
+          required: true
+          description: "The region id of the relevant region (region_id's can be obtained from /congestion/region/list endpoint"
+          schema:
+            type: string
+        - name: segment
+          in: query
+          required: true
+          description: "The vessel segment for which to get tonnage balance data"
+          schema:
+            type: string
+            enum: [capesize, panamax, supramax, handysize]
+      responses:
+        '200':
+          description: Timeseries data for region congestion
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CongestionDataRegion"
+              example:
+                # Properties of the referenced object
+                region_id: GLOBAL
+                date_actual: ["2017-01-01","2017-01-02","2017-01-02","2017-01-02","2017-01-02"]
+                segment: capesize
+                n_congested_vessels: [48,53,66,65,43]
+                avg_waiting_time: [48,53,66,65,43]
+                first_quartile_waiting_time: [48,53,66,65,43]
+                median_waiting_time: [48,53,66,65,43]
+                third_quartile_waiting_time: [48,53,66,65,43]
+                max_waiting_time: [48,53,66,65,43]
+                day_of_year: [1,2,3,4,5]
+                year: [2017,2017,2017,2017,2017]
+                unified_date: ["2017-01-01","2017-01-02","2017-01-02","2017-01-02","2017-01-02"]
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /congestion/region/list:
+    get:
+      summary: List available regions
+      operationId: listCongestionRegions
+      tags:
+        - congestion
+      responses:
+        '200':
+          description: List of regions and region_ids
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Regions"
+              example:
+                # Properties of the referenced object
+                - region_id: GLOBAL
+                  region_name: Global
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /voyages/commodity/list:
+    get:
+      summary: List available commodities
+      operationId: listCommodities
+      tags:
+        - tradeflows
+      responses:
+        '200':
+          description: List of commodities available in the trade flow monitor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Commodity"
+              example:
+                # Properties of the referenced object
+                - commodity: FERTILIZER
+                  commodity_value: fertilizer
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /voyages/data/stats:
+    get:
+      summary: Get trade flow summary stats
+      operationId: getTradeflowStats
+      tags:
+        - tradeflows
+      parameters:
+        - name: commodity
+          in: query
+          required: true
+          description: The commodity to get tradeflows for (get a list of commodities from /v1/voyages/commodities/list)
+          schema:
+            type: string
+        - name: segment
+          in: query
+          required: false
+          description: The vessel segment for which to get tonnage balance data
+          schema:
+            type: string
+            enum: [capesize, panamax, supramax, handysize]
+        - name: from_date
+          in: query
+          required: false
+          description: The starting date to get tradeflows from
+          schema:
+            type: string
+            format: date
+        - name: to_date
+          in: query
+          required: false
+          description: The ending date to get tradeflows to
+          schema:
+            type: string
+            format: date
+        - name: from_country_code
+          in: query
+          required: false
+          description: The two letter ISO country code for loading (export) country
+          schema:
+            type: string
+        - name: to_country_code
+          in: query
+          required: false
+          description: The two letter ISO country code for discharge (import) country
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Get summary stats for tradeflows
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TradeflowStats"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /voyages/data/ladenlegs:
+    get:
+      summary: Get individual voyages
+      operationId: getTradeflowLadenLegs
+      tags:
+        - tradeflows
+      parameters:
+        - name: commodity
+          in: query
+          required: true
+          description: The commodity to get tradeflows for (get a list of commodities from /v1/voyages/commodities/list)
+          schema:
+            type: string
+        - name: segment
+          in: query
+          required: false
+          description: The vessel segment for which to get tonnage balance data
+          schema:
+            type: string
+            enum: [capesize, panamax, supramax, handysize]
+        - name: from_date
+          in: query
+          required: false
+          description: The starting date to get tradeflows from
+          schema:
+            type: string
+            format: date
+        - name: to_date
+          in: query
+          required: false
+          description: The ending date to get tradeflows to
+          schema:
+            type: string
+            format: date
+        - name: from_country_code
+          in: query
+          required: false
+          description: The two letter ISO country code for loading (export) country
+          schema:
+            type: string
+        - name: to_country_code
+          in: query
+          required: false
+          description: The two letter ISO country code for discharge (import) country
+          schema:
+            type: string
+        - name: page
+          in: query
+          required: false
+          description: The page number to retrieve of the response
+          schema:
+            type: number
+            format: int32
+      responses:
+        '200':
+          description: Get summary stats for tradeflows
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VoyageResponse"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /voyages/data/daily:
+    get:
+      summary: Get daily trade flow timeseries
+      operationId: getTradeflowDailyTimeseries
+      tags:
+        - tradeflows
+      parameters:
+        - name: commodity
+          in: query
+          required: true
+          description: The commodity to get tradeflows for (get a list of commodities from /v1/voyages/commodities/list)
+          schema:
+            type: string
+        - name: segment
+          in: query
+          required: false
+          description: The vessel segment for which to get tonnage balance data
+          schema:
+            type: string
+            enum: [capesize, panamax, supramax, handysize]
+        - name: from_date
+          in: query
+          required: false
+          description: The starting date to get tradeflows from
+          schema:
+            type: string
+            format: date
+        - name: to_date
+          in: query
+          required: false
+          description: The ending date to get tradeflows to
+          schema:
+            type: string
+            format: date
+        - name: from_country_code
+          in: query
+          required: false
+          description: The two letter ISO country code for loading (export) country
+          schema:
+            type: string
+        - name: to_country_code
+          in: query
+          required: false
+          description: The two letter ISO country code for discharge (import) country
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Get daily timeseries for tradeflows
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TradeflowTimeseries"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    ApikeyCreatedResponse:
+      type: object
+      required:
+        - apikey_id
+        - access_token
+        - expires
+        - user_id
+        - key_tag
+      properties:
+        apikey_id:
+          type: string
+        access_token:
+          type: string
+        expires:
+          type: number
+          format: int64
+        user_id:
+          type: string
+        key_tag:
+          type: string
+    Apikey:
+      type: object
+      required:
+        - apikey_id
+        - expires
+        - user_id
+        - key_tag
+      properties:
+        apikey_id:
+          type: string
+        expires:
+          type: number
+          format: int64
+        user_id:
+          type: string
+        key_tag:
+          type: string
+    Apikeys:
+      type: object
+      required:
+        - number_of_keys
+        - keys
+      properties:
+        number_of_keys:
+          type: number
+          format: int32
+        keys:
+          type: array
+          items:
+            $ref: "#/components/schemas/Apikey"
+    CreateApikeyRequest:
+      type: object
+      required:
+        - tag
+        - exp
+      properties:
+        tag:
+          type: string
+        exp:
+          type: number
+          format: int64
+    TonnageData:
+      type: object
+      required:
+        - date
+        - vessel_count
+        - year
+        - unified_date
+      properties:
+        date:
+          type: array
+          items: 
+            type: string
+        vessel_count:
+          type: array
+          items:
+            type: number
+            format: int32
+        year:
+          type: array
+          items:
+            type: number
+            format: int32
+        unified_date:
+          type: array
+          items:
+            type: string
+    TimeseriesSeasonalData:
+      type: object
+      required:
+        - date
+        - value
+        - year
+        - unified_date
+      properties:
+        date:
+          type: array
+          items: 
+            type: string
+        value:
+          type: array
+          items:
+            type: number
+            format: float64
+        year:
+          type: array
+          items:
+            type: number
+            format: int32
+        unified_date:
+          type: array
+          items:
+            type: string
+    DryDockSummaryData:
+      type: object
+      required:
+        - month
+        - segment
+        - average_days_in_dock
+        - completed_dock_stays
+      properties:
+        month:
+          type: array
+          items: 
+            type: string
+        segment:
+          type: string
+        average_days_in_dock:
+          type: array
+          items:
+            type: number
+            format: float64
+        completed_dock_stays:
+          type: array
+          items:
+            type: number
+            format: float64
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    CongestionDataPort:
+      type: object
+      required:
+        - port_id
+        - date_actual
+        - segment
+        - n_congested_vessels
+        - avg_waiting_time
+        - first_quartile_waiting_time
+        - median_waiting_time
+        - third_quartile_waiting_time
+        - max_waiting_time
+        - day_of_year
+        - year
+        - unified_date
+      properties:
+        port_id:
+          type: string
+        date_actual:
+          type: array
+          items:
+            type: string
+        n_congested_vessels:
+          type: array
+          items:
+            type: number
+            format: int32
+        avg_waiting_time:
+          type: array
+          items:
+            type: number
+            format: int32
+        first_quartile_waiting_time:
+          type: array
+          items:
+            type: number
+            format: int32
+        median_waiting_time:
+          type: array
+          items:
+            type: number
+            format: int32
+        third_quartile_waiting_time:
+          type: array
+          items:
+            type: number
+            format: int32
+        max_waiting_time:
+          type: array
+          items:
+            type: number
+            format: int32
+        day_of_year:
+          type: array
+          items:
+            type: number
+            format: int32
+        year:
+          type: array
+          items:
+            type: number
+            format: int32
+        unified_date:
+          type: array
+          items:
+            type: string
+    Port:
+      type: object
+      required:
+        - port_id
+        - port_name
+        - country_code
+        - unlocode
+      properties:
+        port_id:
+          type: string
+        port_name:
+          type: string
+        country_code:
+          type: string
+        unlocode:
+          type: string
+    Ports:
+      type: array
+      items:
+        $ref: "#/components/schemas/Port"
+    CongestionDataRegion:
+      type: object
+      required:
+        - region_id
+        - date_actual
+        - segment
+        - n_congested_vessels
+        - avg_waiting_time
+        - first_quartile_waiting_time
+        - median_waiting_time
+        - third_quartile_waiting_time
+        - max_waiting_time
+        - day_of_year
+        - year
+        - unified_date
+      properties:
+        region_id:
+          type: string
+        date_actual:
+          type: array
+          items:
+            type: string
+        n_congested_vessels:
+          type: array
+          items:
+            type: number
+            format: int32
+        avg_waiting_time:
+          type: array
+          items:
+            type: number
+            format: int32
+        first_quartile_waiting_time:
+          type: array
+          items:
+            type: number
+            format: int32
+        median_waiting_time:
+          type: array
+          items:
+            type: number
+            format: int32
+        third_quartile_waiting_time:
+          type: array
+          items:
+            type: number
+            format: int32
+        max_waiting_time:
+          type: array
+          items:
+            type: number
+            format: int32
+        day_of_year:
+          type: array
+          items:
+            type: number
+            format: int32
+        year:
+          type: array
+          items:
+            type: number
+            format: int32
+        unified_date:
+          type: array
+          items:
+            type: string
+    Region:
+      type: object
+      required:
+        - region_id
+        - region_name
+      properties:
+        region_id:
+          type: string
+        region_name:
+          type: string
+    Regions:
+      type: array
+      items:
+        $ref: "#/components/schemas/Region"
+    TradeflowTimeseries:
+      type: object
+      required:
+        - date
+        - volume
+      properties:
+        date:
+          type: array
+          items:
+            type: string
+        volume:
+          type: array
+          items:
+            type: number
+            format: int64
+    TradeflowStats:
+      type: object
+      required:
+        - voyages
+        - volume
+        - unique_origin_ports
+        - unique_destination_ports
+        - unique_vessels
+      properties:
+        voyages:
+          type: number
+          format: int64
+        volume:
+          type: number
+          format: int64
+        unique_origin_ports:
+          type: number
+          format: int64
+        unique_destination_ports:
+          type: number
+          format: int64
+        unique_vessels:
+          type: number
+          format: int64
+    Commodity:
+      type: object
+      required:
+        - region_id
+        - region_name
+      properties:
+        commodity:
+          type: string
+        commodity_value:
+          type: string
+    VoyageResponse:
+      type: object
+      required:
+        - current_page
+        - previous_page
+        - next_page
+        - max_page
+        - records
+        - total_records
+        - data
+      properties:
+        current_page:
+          type: number
+          format: int32
+        previous_page:
+          type: number
+          format: int32
+        next_page:
+          type: number
+          format: int32
+        max_page:
+          type: number
+          format: int32
+        records:
+          type: number
+          format: int32
+        total_records:
+          type: number
+          format: int32
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Voyage"
+    Voyage:
+      type: object
+      required:
+        - imo
+        - vessel_name
+        - segment
+        - commodity
+        - volume
+        - from_port_id
+        - from_port_name
+        - from_port_coords_wkt
+        - from_berth_name
+        - from_country_code
+        - from_country
+        - from_berth_arrival
+        - from_berth_departure
+        - to_port_id
+        - to_port_name
+        - to_port_coords_wkt
+        - to_berth_name
+        - to_country_code
+        - to_country
+        - to_berth_arrival
+        - to_berth_departure
+      properties:
+        imo:
+          type: number
+          format: int32
+        vessel_name:
+          type: string
+        segment:
+          type: string
+        commodity:
+          type: string
+        volume:
+          type: number
+          format: int64
+        from_port_id:
+          type: number
+          format: int64
+        from_port_name:
+          type: string
+        from_berth_name:
+          type: string
+        from_country_code:
+          type: string
+        from_country:
+          type: string
+        from_berth_arrival:
+          type: string
+        from_berth_departure:
+          type: string
+        to_port_id:
+          type: number
+          format: int64
+        to_port_name:
+          type: string
+        to_berth_name:
+          type: string
+        to_country_code:
+          type: string
+        to_country:
+          type: string
+        to_berth_arrival:
+          type: string
+        to_berth_departure:
+          type: string
+  requestBodies:
+    CreateApikeyRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateApikeyRequest'
+          example:
+            # Properties of the referenced object
+            tag: my-api-key
+            exp: 1598714328
+      description: Parameters to used to create the new apikey
+      required: true
+  securitySchemes:
+    api_key:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  examples:
+    TonnageData:
+      value:
+        date: ["2019-01-01","2019-01-02","2019-01-03","2019-01-04","2019-01-05"]
+        vessel_count: [92,97,109,85,45]
+        year: [2019,2019,2019,2019,2019]
+        unified_date: ["2019-01-01","2019-01-02","2019-01-03","2019-01-04","2019-01-05"]
+    TimeseriesSeasonalData:
+      value:
+        date: ["2019-01-01","2019-01-02","2019-01-03"]
+        value: [1,2,3]
+        year: [2019,2019,2019]
+        unified_date: ["2019-01-01","2019-01-02","2019-01-03"]
+    Voyage:
+      value:
+        imo: 9573103
+        vessel_name: P. S. Palios
+        segment: Capesize
+        commodity: COAL
+        volume: 147800
+        from_port_id: 122
+        from_port_name: Newcastle
+        from_berth_name: 'Newcastle PWCS Kooragang Coal Terminal Berths #4 to 7'
+        from_country_code: AU
+        from_country: Australia
+        from_berth_arrival: '2018-07-21 21:53:57'
+        from_berth_departure: '2018-07-23 07:08:24'
+        to_port_id: 432
+        to_port_name: Qingdao
+        to_berth_name: Qingdao Coal & Ores Berth 2
+        to_country_code: CN
+        to_country: China
+        to_berth_arrival: '2018-08-28 23:35:09'
+        to_berth_departure: '2018-08-31 10:49:59'
+    DryDockSummaryData:
+      value:
+        month: ["2019-01-01","2019-02-01","2019-03-01","2019-04-01"]
+        segment: "Capesize"
+        average_days_in_dock: [18,18,22,20]
+        completed_dock_stays: [14,19,32,3]
+
+security:
+  - api_key: []
