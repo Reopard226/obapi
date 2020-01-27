@@ -5,7 +5,7 @@
 
 variables:
   GITLAB_IMAGE: registry.gitlab.com/oceanbolt/obapi/iamserver
-  GCR_IMAGE_STAGING: eu.gcr.io/x-api-staging/obapi/iamserver
+  GCR_IMAGE_STAGING: eu.gcr.io/obx-api-staging/obapi/iamserver
   GCR_IMAGE_PROD: eu.gcr.io/obx-api-prod/obapi/iamserver
   GCP_PROJECT_STAGING: obx-api-staging
   GCP_PROJECT_PROD: obx-api-prod
