@@ -24,4 +24,10 @@ var (
 
 	// ErrMissingRegionID is region_id missing error within request
 	ErrMissingRegionID = "Error parameter 'region_id' is missing with no default"
+
+	// ErrParseCreatKeyParams is parse error of create key request params
+	ErrParseCreatKeyParams = "Could not parse request payload - 'tag' entry should be string, 'exp' entry should be int64 and value should be seconds since epoch"
+
+	// ErrMissingTag is tag missig error within request
+	ErrMissingTag = "Missing 'tag' entry in request payload"
 )

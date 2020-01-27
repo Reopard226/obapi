@@ -67,7 +67,7 @@ func (h *HTTP) dryDockTimeseries(c echo.Context) error {
 	}
 	result, err := h.svc.DryDockTimeseries(c, s, Params.Metric, Params.Absolute)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return c.String(http.StatusBadRequest, err.Error())
 	}
 	return c.JSON(http.StatusOK, result)
 }
@@ -87,7 +87,7 @@ func (h *HTTP) dryDockSummaryStats(c echo.Context) error {
 	}
 	result, err := h.svc.DryDockSummaryStats(c, s)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return c.String(http.StatusBadRequest, err.Error())
 	}
 	return c.JSON(http.StatusOK, result)
 }

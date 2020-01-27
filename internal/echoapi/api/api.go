@@ -8,6 +8,10 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"oceanbolt.com/obapi/internal/echoapi/utl/zlog"
 
+	"oceanbolt.com/obapi/internal/echoapi/api/apiaccess"
+	al "oceanbolt.com/obapi/internal/echoapi/api/apiaccess/logging"
+	at "oceanbolt.com/obapi/internal/echoapi/api/apiaccess/transport"
+
 	"oceanbolt.com/obapi/internal/echoapi/api/tonnage"
 	tl "oceanbolt.com/obapi/internal/echoapi/api/tonnage/logging"
 	tt "oceanbolt.com/obapi/internal/echoapi/api/tonnage/transport"
@@ -41,6 +45,7 @@ func Start(db *mongo.Database, cfg *config.Configuration, envkeyCfg *config.Conf
 		v1.Use(jwtService.MWFunc())
 	}
 
+	at.NewHTTP(al.New(apiaccess.Initialize(iam, rbac, sec), log), v1)
 	tt.NewHTTP(tl.New(tonnage.Initialize(db, rbac, sec), log), v1)
 	ct.NewHTTP(cl.New(congestion.Initialize(db, rbac, sec), log), v1)
 

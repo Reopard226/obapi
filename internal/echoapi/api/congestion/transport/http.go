@@ -69,7 +69,7 @@ func (h *HTTP) congestionRegion(c echo.Context) error {
 	s := strings.Title(strings.ToLower(Params.Segment))
 	result, err := h.svc.CongestionRegion(c, regID, s)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return c.String(http.StatusBadRequest, err.Error())
 	}
 	return c.JSON(http.StatusOK, result)
 }
@@ -77,7 +77,7 @@ func (h *HTTP) congestionRegion(c echo.Context) error {
 func (h *HTTP) listPort(c echo.Context) error {
 	result, err := h.svc.ListPort(c)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return c.String(http.StatusBadRequest, err.Error())
 	}
 	return c.JSON(http.StatusOK, result)
 }
@@ -85,7 +85,7 @@ func (h *HTTP) listPort(c echo.Context) error {
 func (h *HTTP) listRegion(c echo.Context) error {
 	result, err := h.svc.ListRegion(c)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+		return c.String(http.StatusBadRequest, err.Error())
 	}
 	return c.JSON(http.StatusOK, result)
 }
