@@ -27,7 +27,8 @@ func NewHTTP(svc apiaccess.Service, er *echo.Group) {
 }
 
 func (h *HTTP) listKey(c echo.Context) error {
-	result, err := h.svc.ListKey(c)
+	user_id := c.Get("user_id").(string)
+	result, err := h.svc.ListKey(c, user_id)
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
@@ -47,8 +48,9 @@ func (h *HTTP) createKey(c echo.Context) error {
 	if payload.Tag == "" {
 		return c.String(http.StatusBadRequest, model.ErrMissingTag)
 	}
+	user_id := c.Get("user_id").(string)
 
-	result, err := h.svc.CreateKey(c, payload.Tag, payload.Exp)
+	result, err := h.svc.CreateKey(c, user_id, payload.Tag, payload.Exp)
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
@@ -57,7 +59,8 @@ func (h *HTTP) createKey(c echo.Context) error {
 
 func (h *HTTP) deleteKey(c echo.Context) error {
 	apiKeyID := c.Param("apikey_id")
-	result, err := h.svc.DeleteKey(c, apiKeyID)
+	user_id := c.Get("user_id").(string)
+	result, err := h.svc.DeleteKey(c, user_id, apiKeyID)
 	if err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}

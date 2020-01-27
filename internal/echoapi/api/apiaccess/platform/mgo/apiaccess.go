@@ -16,23 +16,23 @@ func NewApiaccess() *Apiaccess {
 }
 
 // ListKey returns list of apiaccess keys
-func (u *Apiaccess) ListKey(client iamclient.OceanboltIAMClient) (*iam.UserKeys, error) {
-	return client.ListKeys(context.Background(), &iam.User{UserId: "auth0|5d89314ad227b10d5b5c1c88"})
+func (u *Apiaccess) ListKey(client iamclient.OceanboltIAMClient, user_id string) (*iam.UserKeys, error) {
+	return client.ListKeys(context.Background(), &iam.User{UserId: user_id})
 }
 
 // CreateKey creates new api access key
-func (u *Apiaccess) CreateKey(client iamclient.OceanboltIAMClient, tag string, exp int64) (*iam.UserKeyWithSecret, error) {
+func (u *Apiaccess) CreateKey(client iamclient.OceanboltIAMClient, user_id string, tag string, exp int64) (*iam.UserKeyWithSecret, error) {
 	return client.CreateKey(context.Background(), &iam.CreateKeyRequest{
 		Expires: exp,
 		KeyTag:  tag,
-		UserId:  "auth0|5d89314ad227b10d5b5c1c88",
+		UserId:  user_id,
 	})
 }
 
 // DeleteKey delete one api access key
-func (u *Apiaccess) DeleteKey(client iamclient.OceanboltIAMClient, apikeyID string) (*iam.KeyDeletedResponse, error) {
+func (u *Apiaccess) DeleteKey(client iamclient.OceanboltIAMClient, user_id string, apikeyID string) (*iam.KeyDeletedResponse, error) {
 	return client.DeleteKey(context.Background(), &iam.DeleteKeyRequest{
 		ApikeyId: apikeyID,
-		UserId:   "auth0|5d89314ad227b10d5b5c1c88",
+		UserId:   user_id,
 	})
 }

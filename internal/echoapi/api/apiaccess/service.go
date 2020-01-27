@@ -10,9 +10,9 @@ import (
 
 // Service represents apiaccess application interface
 type Service interface {
-	ListKey(echo.Context) (*iam.UserKeys, error)
-	CreateKey(echo.Context, string, int64) (*iam.UserKeyWithSecret, error)
-	DeleteKey(echo.Context, string) (*iam.KeyDeletedResponse, error)
+	ListKey(echo.Context, string) (*iam.UserKeys, error)
+	CreateKey(echo.Context, string, string, int64) (*iam.UserKeyWithSecret, error)
+	DeleteKey(echo.Context, string, string) (*iam.KeyDeletedResponse, error)
 }
 
 // New creates new apiaccess application service
@@ -40,9 +40,9 @@ type Securer interface {
 
 // UDB represents apiaccess repository interface
 type UDB interface {
-	ListKey(iamclient.OceanboltIAMClient) (*iam.UserKeys, error)
-	CreateKey(iamclient.OceanboltIAMClient, string, int64) (*iam.UserKeyWithSecret, error)
-	DeleteKey(iamclient.OceanboltIAMClient, string) (*iam.KeyDeletedResponse, error)
+	ListKey(iamclient.OceanboltIAMClient, string) (*iam.UserKeys, error)
+	CreateKey(iamclient.OceanboltIAMClient, string, string, int64) (*iam.UserKeyWithSecret, error)
+	DeleteKey(iamclient.OceanboltIAMClient, string, string) (*iam.KeyDeletedResponse, error)
 }
 
 type RBAC interface {

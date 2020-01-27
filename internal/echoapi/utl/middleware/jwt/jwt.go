@@ -80,15 +80,18 @@ func (j *Service) MWFunc() echo.MiddlewareFunc {
 					interfaces[k] = v
 				}
 
-				claims["permissions"] = permissions
+				claims["permissions"] = interfaces
 			}
 			//fmt.Printf("{\"time\":\"%v\",\"userId\":\"%s\",\"access_type\":\"%s\",\"url\":\"%s\"}\n", time.Now().Format(time.RFC3339), claims["sub"], accessType, c.Path())
 
+			c.Set("user", token)
+			//c.Set("permissions",claims["permissions"])
 			c.Set("apikeyId", apikeyId)
 			c.Set("user_id", userId)
 			c.Set("obkid", obkid)
 			c.Set("access_type", accessType)
 
+			//log.Printf("%v",c.Get("permissions").([]string))
 			return next(c)
 		}
 	}
@@ -125,25 +128,27 @@ func (j *Service) ParseToken(c echo.Context) (*jwt.Token, error) {
 
 }
 
-func verifyStandardClaims(next echo.HandlerFunc) echo.HandlerFunc {
-	return func(c echo.Context) error {
+func (j *Service) VerifyStandardClaims() echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
 
-		if !strings.HasPrefix(c.Request().RequestURI, "/v1") {
+			if !strings.HasPrefix(c.Request().RequestURI, "/v1") {
+				return next(c)
+			}
+
+			user := c.Get("user").(*jwt.Token)
+			claims := user.Claims.(jwt.MapClaims)
+
+			audience := claims.VerifyAudience("https://api.oceanbolt.com", false)
+			if !audience {
+				return echo.NewHTTPError(http.StatusUnauthorized, "Invalid audience")
+			}
+			issuer := claims.VerifyIssuer("https://oceanbolt.eu.auth0.com/", false)
+			if !issuer {
+				return echo.NewHTTPError(http.StatusUnauthorized, "Invalid issuer")
+			}
+
 			return next(c)
 		}
-
-		user := c.Get("user").(*jwt.Token)
-		claims := user.Claims.(jwt.MapClaims)
-
-		audience := claims.VerifyAudience("https://api.oceanbolt.com", false)
-		if !audience {
-			return echo.NewHTTPError(http.StatusUnauthorized, "Invalid audience")
-		}
-		issuer := claims.VerifyIssuer("https://oceanbolt.eu.auth0.com/", false)
-		if !issuer {
-			return echo.NewHTTPError(http.StatusUnauthorized, "Invalid issuer")
-		}
-
-		return next(c)
 	}
 }

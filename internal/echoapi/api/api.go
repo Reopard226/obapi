@@ -3,6 +3,7 @@ package api
 import (
 	"crypto/sha1"
 	"fmt"
+	"oceanbolt.com/obapi/internal/echoapi/utl/middleware/permissions"
 	"oceanbolt.com/obapi/internal/iam/iamclient"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -43,6 +44,8 @@ func Start(db *mongo.Database, cfg *config.Configuration, envkeyCfg *config.Conf
 	useAUTH := false
 	if useAUTH {
 		v1.Use(jwtService.MWFunc())
+		v1.Use(jwtService.VerifyStandardClaims())
+		v1.Use(permissions.CheckPermissions("read:congestion"))
 	}
 
 	at.NewHTTP(al.New(apiaccess.Initialize(iam, rbac, sec), log), v1)

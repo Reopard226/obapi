@@ -37,7 +37,7 @@ type ReqDelete struct {
 }
 
 // ListKey logging
-func (ls *LogService) ListKey(c echo.Context) (resp *iam.UserKeys, err error) {
+func (ls *LogService) ListKey(c echo.Context, user_id string) (resp *iam.UserKeys, err error) {
 	defer func(begin time.Time) {
 		ls.logger.Log(
 			c,
@@ -48,11 +48,12 @@ func (ls *LogService) ListKey(c echo.Context) (resp *iam.UserKeys, err error) {
 			},
 		)
 	}(time.Now())
-	return ls.Service.ListKey(c)
+
+	return ls.Service.ListKey(c, user_id)
 }
 
 // CreateKey logging
-func (ls *LogService) CreateKey(c echo.Context, tag string, exp int64) (resp *iam.UserKeyWithSecret, err error) {
+func (ls *LogService) CreateKey(c echo.Context, user_id string, tag string, exp int64) (resp *iam.UserKeyWithSecret, err error) {
 	defer func(begin time.Time) {
 		ls.logger.Log(
 			c,
@@ -64,11 +65,12 @@ func (ls *LogService) CreateKey(c echo.Context, tag string, exp int64) (resp *ia
 			},
 		)
 	}(time.Now())
-	return ls.Service.CreateKey(c, tag, exp)
+
+	return ls.Service.CreateKey(c, user_id, tag, exp)
 }
 
 // DeleteKey logging
-func (ls *LogService) DeleteKey(c echo.Context, apikeyID string) (resp *iam.KeyDeletedResponse, err error) {
+func (ls *LogService) DeleteKey(c echo.Context, user_id string, apikeyID string) (resp *iam.KeyDeletedResponse, err error) {
 	defer func(begin time.Time) {
 		ls.logger.Log(
 			c,
@@ -80,5 +82,5 @@ func (ls *LogService) DeleteKey(c echo.Context, apikeyID string) (resp *iam.KeyD
 			},
 		)
 	}(time.Now())
-	return ls.Service.DeleteKey(c, apikeyID)
+	return ls.Service.DeleteKey(c, user_id, apikeyID)
 }
