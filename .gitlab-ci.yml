@@ -5,10 +5,10 @@
 
 variables:
   GITLAB_IMAGE: registry.gitlab.com/oceanbolt/obapi/iamserver
-  GCR_IMAGE_STAGING: eu.gcr.io/ob-api-staging/obapi/iamserver
-  GCR_IMAGE_PROD: eu.gcr.io/ob-api-prod/obapi/iamserver
-  GCP_PROJECT_STAGING: ob-api-staging
-  GCP_PROJECT_PROD: ob-api-prod
+  GCR_IMAGE_STAGING: eu.gcr.io/x-api-staging/obapi/iamserver
+  GCR_IMAGE_PROD: eu.gcr.io/obx-api-prod/obapi/iamserver
+  GCP_PROJECT_STAGING: obx-api-staging
+  GCP_PROJECT_PROD: obx-api-prod
 
 stages:
   - build and test
@@ -113,7 +113,7 @@ deploy to staging:
       --platform managed
       --region europe-west1
       --update-env-vars ENVKEY=$ENVKEY_STAGING
-      --service-account iamserver-cloud-run@ob-api-staging.iam.gserviceaccount.com
+      --service-account iamserver-cloud-run@obx-api-staging.iam.gserviceaccount.com
   environment:
     name: staging
     #url: https://api-v2.oceanbolt.com
@@ -135,7 +135,7 @@ deploy to prod:
       --platform managed
       --region europe-west1
       --update-env-vars ENVKEY=$ENVKEY_PROD
-      --service-account iamserver-cloud-run@ob-api-prod.iam.gserviceaccount.com
+      --service-account iamserver-cloud-run@obx-api-prod.iam.gserviceaccount.com
   environment:
     name: production
     #url: https://api-staging-v2.internal.oceanbolt.com
