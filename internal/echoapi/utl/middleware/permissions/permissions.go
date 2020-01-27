@@ -33,7 +33,7 @@ func CheckPermissions(permission string) echo.MiddlewareFunc {
 				for _, v := range claims["permissions"].([]interface{}) {
 					s, ok := v.(string)
 					if !ok {
-						log.Println("Permission was coercible into string: %s", s)
+						log.Printf("Permission was coercible into string: %s", s)
 					} else {
 						permissions_scope_combined = append(permissions_scope_combined, s)
 					}
