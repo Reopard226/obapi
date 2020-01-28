@@ -17,7 +17,7 @@ type PermissionCache struct {
 
 // ValidateKey validates that an access token exists in backend db and is valid
 func (s *Server) ValidateKey(ctx context.Context, key *pb.UserKey) (resp *pb.ValidationResponse, err error) {
-	db := dao.IamDAO{Ctx: ctx, Fs: s.Fs}
+	db := dao.IamDAO{Ctx: ctx, Ds: s.Ds}
 
 	/*initMap := make(map[string]PermissionCache)
 
@@ -37,10 +37,7 @@ func (s *Server) ValidateKey(ctx context.Context, key *pb.UserKey) (resp *pb.Val
 	log.Println("Fetching new permissions")
 	*/
 
-	keyExists, err := db.CheckIfApikeyExistsFS(key)
-	if err != nil {
-		return nil, err
-	}
+	keyExists := db.CheckIfApikeyExistsDS(key)
 
 	if !keyExists {
 		return &pb.ValidationResponse{

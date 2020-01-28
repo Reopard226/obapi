@@ -20,26 +20,26 @@ service Apikey {
 
 // User object used to retrieve keys
 message User {
-    string user_id = 1 [(tagger.tags) = "bson:\"user_id,omitempty\" firestore:\"user_id,omitempty\""]; // The Auth0 userid for the user
+    string user_id = 1 [(tagger.tags) = "bson:\"user_id,omitempty\" datastore:\"user_id,omitempty\""]; // The Auth0 userid for the user
 }
 
 message PrivateKey {
-    string kid = 1 [(tagger.tags) = "bson:\"kid,omitempty\" firestore:\"kid,omitempty\""]; // The kid
+    string kid = 1 [(tagger.tags) = "bson:\"kid,omitempty\" datastore:\"kid,omitempty\""]; // The kid
 }
 
 message PublicKey {
-    string kid = 1 [(tagger.tags) = "bson:\"kid,omitempty\" firestore:\"kid,omitempty\""]; // The Auth0 userid for the user
-    string key_env = 2 [(tagger.tags) = "bson:\"key_env,omitempty\" firestore:\"key_env,omitempty\""]; // The Auth0 userid for the user
-    bytes public_key = 3 [(tagger.tags) = "bson:\"public_key,omitempty\" firestore:\"public_key,omitempty\""]; // The Auth0 userid for the user
+    string kid = 1 [(tagger.tags) = "bson:\"kid,omitempty\" datastore:\"kid,omitempty\""]; // The Auth0 userid for the user
+    string key_env = 2 [(tagger.tags) = "bson:\"key_env,omitempty\" datastore:\"key_env,omitempty\""]; // The Auth0 userid for the user
+    bytes public_key = 3 [(tagger.tags) = "bson:\"public_key,omitempty\" datastore:\"public_key,omitempty\""]; // The Auth0 userid for the user
 
 }
 
 message UserKey {
-    int64 expires = 1 [(tagger.tags) = "bson:\"expires,omitempty\" firestore:\"expires,omitempty\""];
-    string apikey_id = 2 [(tagger.tags) = "bson:\"apikey_id,omitempty\" firestore:\"apikey_id,omitempty\""];
-    string key_tag = 3 [(tagger.tags) = "bson:\"key_tag,omitempty\" firestore:\"key_tag,omitempty\""];
-    string user_id = 4 [(tagger.tags) = "bson:\"user_id,omitempty\" firestore:\"user_id,omitempty\""];
-    string signing_key_id = 5 [(tagger.tags) = "bson:\"signing_key_id,omitempty\" firestore:\"signing_key_id,omitempty\""];
+    int64 expires = 1 [(tagger.tags) = "bson:\"expires,omitempty\" datastore:\"expires,omitempty\""];
+    string apikey_id = 2 [(tagger.tags) = "bson:\"apikey_id,omitempty\" datastore:\"apikey_id,omitempty\""];
+    string key_tag = 3 [(tagger.tags) = "bson:\"key_tag,omitempty\" datastore:\"key_tag,omitempty\""];
+    string user_id = 4 [(tagger.tags) = "bson:\"user_id,omitempty\" datastore:\"user_id,omitempty\""];
+    string signing_key_id = 5 [(tagger.tags) = "bson:\"signing_key_id,omitempty\" datastore:\"signing_key_id,omitempty\""];
 }
 
 message UserKeys {

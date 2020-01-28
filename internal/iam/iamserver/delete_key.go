@@ -7,9 +7,9 @@ import (
 )
 
 func (s *Server) DeleteKey(ctx context.Context, req *iam.DeleteKeyRequest) (resp *iam.KeyDeletedResponse, err error) {
-	db := dao.IamDAO{Ctx: ctx, Fs: s.Fs}
+	db := dao.IamDAO{Ctx: ctx, Ds: s.Ds}
 
-	err = db.DeleteKeyFS(req)
+	err = db.DeleteKeyDS(req)
 	if err != nil {
 		return resp, err
 	}

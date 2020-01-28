@@ -14,7 +14,7 @@ import (
 const Auth0KeyUrl = "https://oceanbolt.eu.auth0.com/.well-known/jwks.json"
 
 func (s *Server) GetPublicKey(ctx context.Context, pk *iam.PrivateKey) (pub *iam.PublicKey, err error) {
-	db := dao.IamDAO{Ctx: ctx, Fs: s.Fs}
+	db := dao.IamDAO{Ctx: ctx, Ds: s.Ds}
 
 	key, err := ParseJWKSAuth0(pk.Kid)
 	if err == nil {
@@ -25,7 +25,7 @@ func (s *Server) GetPublicKey(ctx context.Context, pk *iam.PrivateKey) (pub *iam
 		}, nil
 	}
 
-	return db.GetPublicKeyFS(pk)
+	return db.GetPublicKeyDS(pk)
 
 }
 

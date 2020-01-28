@@ -40,16 +40,26 @@ func main() {
 		panic(err)
 	}
 
-	fs, err := dao.NewFireStoreDatabase(context.Background(), cfg.GCP_PROJECT)
+	/*fs, err := dao.NewFireStoreDatabase(context.Background(), cfg.GCP_PROJECT)
 	if err != nil {
 		panic(err)
 	}
 	defer fs.Close()
+	*/
+	ds, err := dao.NewDataStoreDatabase(context.Background(), cfg.GCP_PROJECT)
+	if err != nil {
+		panic(err)
+	}
+	defer ds.Close()
+
+	if ds == nil {
+		panic("ERROR NO CLIENT!!!!!!")
+	}
 
 	server := &iamserver.Server{
 		Config: &cfg,
 		Auth0:  auth0,
-		Fs:     fs,
+		Ds:     ds,
 	} // implements Haberdasher interface
 
 	twirpHandler := iam.NewApikeyServer(server, hooks.NewLoggerHooks())

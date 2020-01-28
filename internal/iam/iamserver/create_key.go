@@ -18,7 +18,7 @@ import (
 
 // CreateKey inserts new apikey in backend db
 func (s *Server) CreateKey(ctx context.Context, req *iam.CreateKeyRequest) (key *iam.UserKeyWithSecret, err error) {
-	db := dao.IamDAO{Ctx: ctx, Fs: s.Fs}
+	db := dao.IamDAO{Ctx: ctx, Ds: s.Ds}
 
 	privateKey, err := jwt.ParseRSAPrivateKeyFromPEM([]byte(s.Config.JWKS_RS256_PRIVATE_KEY))
 	if err != nil {
@@ -30,10 +30,10 @@ func (s *Server) CreateKey(ctx context.Context, req *iam.CreateKeyRequest) (key 
 	signKeyStringPrint := fmt.Sprintf("%x", signKeyBytePrint)
 
 	log.Println("Checking if keys exists")
-	if ok := db.CheckIfPublicKeyExistsFS(signKeyStringPrint); !ok {
+	if ok := db.CheckIfPublicKeyExistsDS(signKeyStringPrint); !ok {
 		log.Println("Key did not exist. inserting...")
 		publicKey, _ := extractPublicKeyFromPrivate(privateKey)
-		db.InsertPublicKeyFS(&iam.PublicKey{
+		db.InsertPublicKeyDS(&iam.PublicKey{
 			Kid:       signKeyStringPrint,
 			KeyEnv:    s.Config.OBENV,
 			PublicKey: publicKey,
@@ -57,7 +57,7 @@ func (s *Server) CreateKey(ctx context.Context, req *iam.CreateKeyRequest) (key 
 		log.Fatal("Token could not be signed")
 	}
 	log.Printf("Inserting key")
-	err = db.InsertKeyFS(&iam.UserKey{
+	err = db.InsertKeyDS(&iam.UserKey{
 		ApikeyId:     obkid,
 		Expires:      req.Expires,
 		UserId:       req.UserId,

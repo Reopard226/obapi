@@ -4,6 +4,7 @@ go 1.13
 
 require (
 	cloud.google.com/go v0.51.0
+	cloud.google.com/go/datastore v1.0.0
 	cloud.google.com/go/firestore v1.1.1
 	github.com/DataDog/zstd v1.4.4 // indirect
 	github.com/aybabtme/iocontrol v0.0.0-20150809002002-ad15bcfc95a0 // indirect
